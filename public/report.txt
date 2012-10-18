@@ -9,7 +9,7 @@ CSCI 265 Ex. 1-2 (Brief Over View?)
 
 Team Members: Check ALL the names
 	Matthew Cormons
-	Lochlin Deperron
+	Lochlin Duperron
 	Oliver Jourmel
 	Meara Kimball
 	Marius Loots
