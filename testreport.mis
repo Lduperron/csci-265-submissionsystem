@@ -1,0 +1,24 @@
+Class Method New
+----------------
+- Input: student number, date, course, and an input file
+- Normal Behaviour: Accepts parameters as listed above, and inserts into an associative array with similarly named tags + a grade (set to 0 by default), then returns a hash to the array
+- Output: Hash to in-class array
+
+Instance Method getNumOfDiff
+----------------------------
+- Input: input file, date, course
+- Normal Behaviour: compares the input file to our expected/marked assignment on the server, stored in a directory corresponding to the course and the date, calculates the number of deviations, and returns the number of errors
+- Output: Returns the number of errors/deviations
+
+Instance Method calculateGrade
+------------------------------
+- Input: Number of Differences
+- Normal Behaviour: Uses input and divides it by the number of characters in the expected assignment file and multiplies it by 100 - returns the percentage complement
+- Output: returns percentage correct
+
+Instance Method dumpMark
+------------------------
+Input: grade, assignment file, course
+Normal Behaviour: Compiles the grade and the original file and exports it in a file with the student number in a date/course specific directory
+Output: Creates a file, returns nothing
+
