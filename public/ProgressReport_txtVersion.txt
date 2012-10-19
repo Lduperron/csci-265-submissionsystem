@@ -1,0 +1,86 @@
+CSCI 265
+Progress Report
+For the development of an Assignment Submission System
+
+
+
+
+
+
+
+
+
+Overview
+This report will indicate general progress made on the project to develop of the "Assignment Submission 
+System" as requested by Peter Walsh, University-College Professor at Vancouver Island University.
+
+Project Management
+A tool called Trello was approved by the team to use for the management, brainstorming, and communication 
+in the team.  Access to the tool is available at http://www.trello.com on request.
+All code and documentation are stored at a repository at http://code.google.com.  SVN is the revision control 
+system used.
+
+Team Members
+A selection was made from the available CSCI 265 students.  The following people were appointed to the team:
+*	Matthew Cormons
+*	Lochlin Duperron
+*	Oliver Jourmel
+*	Meara Kimball
+*	Marius Loots
+*	Evan Seabrook
+
+Team Hierarchy
+This team will work cooperatively on the project.  There will be no formal leader.  Should any one 
+person's commitment to the team be questioned, proper documentation will result.
+
+Decision Making Process
+This team will make major structural decisions with a vote.
+Majority wins. In the case of a tie, there will be a discussion, using the Conflict Resolution Methodology adopted, and a re-vote.  It is not expected that this team will experience a deadlock, but 
+will reach consensus in most decisions.
+
+Conflict Resolution
+The "Interest-Based Relational Approach" to conflict resolution was adopting as the working theory.  A good 
+discussion of the approach can be found at https://www.grad.ubc.ca/current-students/gps-graduate-
+pathways-success/conflict-resolution.
+
+Meetings
+Formal Team meetings are held every Monday.  Intermediate meetings are scheduled on a need basis.  
+Minutes are only kept for Formal Team Meetings.
+
+Requirements Specifications
+The system's design is in progress and the necessary documentation is being developed.  The following Module 
+Interface Specifications have been submitted to the team for initial review:
+*	Client Module
+*	Password Generation and Verification Module
+*	Submission Server
+*	Reporting Module
+
+Development on these modules will commence as soon as the team approves the documents.  This will also 
+signal the start of the Test Plan development.
+
+Road ahead
+1.	Team verification of Requirements Specifications and Module Interface Specifications.
+2.	Start development of Modules.
+3.	Design and develop test plans and test benches.
+4.	Code review on Module Implementations done by team.
+5.	Run test benches.
+6.	Adapt code if necessary.
+7.	Develop System Test Procedures.
+8.	Develop Module and User Guides.
+9.	Final system review and signoff.
+
+Current and foreseen issues
+This team perceives our inexperience with Perl and C shell as a challenge.  We understand that this is a 
+learning process and will be able to resolve this.
+We recognize our other priorities to school, family, and work.  We acknowledge the time 
+requirements that this project has.
+
+
+CSCI 265
+Progress Report - Assignment 1&2
+October 17, 2012
+							        
+
+
+page 2 of 3
+
