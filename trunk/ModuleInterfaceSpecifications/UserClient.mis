@@ -1,0 +1,14 @@
+MIS for User Client Interface (DRAFT)
+
+This program, like all basic PERL programs, will be accessed by the user through a Terminal window using the perl progname.pl command.
+
+ This program, hereto forth identified as this program, will accept as command line arguments the user name, the user’s password, the name of the class enrolled in, and the file the user wishes to submit in this order. 
+
+This program will also accept the absence of command line arguments and prompt the user for appropriate input upon startup of the program.  Upon receiving a user name, course name, and password this program will pass these values to the server to be checked for validity.
+
+If these provided items prove to be invalid the server will pass back an appropriate response allowing this program to prompt the user that one of said parameters was invalid after which the program will exit.
+
+If these three parameters are valid the program will then pass the file to server to be submitted.  If the server submit is unsuccessful, the server will pass back an appropriate response allowing this program to display an error message and quit.
+
+If the server submit is successful, the server will return an appropriate response allowing this program to display a message saying the file submission was successful and quit.
+
