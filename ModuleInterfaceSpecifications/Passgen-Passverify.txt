@@ -5,4 +5,11 @@ Public methods:
 -	Generate(name , [class])  (Or maybe Generate(filehandle)) – Produces a file in its directory with a list of one-time passwords.  Immediately invalidates any existing passwords for the provided name (if in the same class)
 -	Verify(name, password, [class]) – Returns true or false, checking against the top password in the file with the name “name”.  If true, password is immediately invalidated and deleted from the file.  
 -	printSettings() – Prints current password generation settings to standard out
+-	getSetting(setting) - Returns a string containing the value of the associated setting.
 -	setSetting(setting, value) – Modifies a setting to a new value.  Preforms basic checking on provided value.
+
+Settings:
+	length (int)
+	type (string, alphanum or num)
+	number (number of passwords in a password sheet)
+	
