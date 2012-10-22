@@ -1,9 +1,7 @@
 .:
 bin
 config
-dirstruct.txt
 doc
-nano.save
 student
 subject
 
@@ -34,6 +32,8 @@ cs3
 as1
 as2
 as3
+assignments.txt
+enrolment.txt
 
 ./subject/cs1/as1:
 students
@@ -41,10 +41,22 @@ texp
 tinp
 
 ./subject/cs1/as1/students:
+beth
+bob
+joe
+oliver
+
+./subject/cs1/as1/students/beth:
+
+./subject/cs1/as1/students/bob:
+
+./subject/cs1/as1/students/joe:
+
+./subject/cs1/as1/students/oliver:
 submision.cpp
 tact
 
-./subject/cs1/as1/students/tact:
+./subject/cs1/as1/students/oliver/tact:
 output.txt
 
 ./subject/cs1/as1/texp:
