@@ -1,0 +1,236 @@
+MIS
+-----------------------------------------------------------------------
+main.pl
+-----------------------------------------------------------------------
+Normal Behavior
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+This perl program will not accept any command line arguments
+
+eg.
+
+$ main <CR>
+
+
+At start up, This program will read config files from /config/
+
+   1) /config/CourseConfig.txt
+
+   2) /config/<COURSENAME>/<COURSENAME.TXT>
+
+   3) /config/StudentConfig.txt
+
+   4) /PasswordConfig.txt
+
+From these config files, main will set program variable, and create ALL
+directory's required by this program:
+
+main.pl will be an INTERACTIVE program providing the user will the following commands.
+
+   ServerStart
+   ServerStop
+   ServerStatus
+
+   PasswordGenerateAll
+   PasswordGenerate(<STUDENT_NAME>)
+   
+   ClearPasswordALL
+   ClearPassword(<STUDENT_NAME>)
+
+   ReportSimple(<COURSE><ASSIGNMENT>)
+   ReportDetails(<COURSE><ASSIGNMENT><STUDENT_NAME>)
+
+
+Each command will refer to a subroutine within main.pl
+
+ServerStart
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   Server(<STRING>)
+
+   Normal Behavior (STRING==Start)
+      execute SubmitServer.pl in background of Linux machine
+   Exceptions
+      SubmitServer.pl already running, error returned
+      unable to start SubmitServer.pl, error returned
+   Assumptions
+      SubmitServer.pl exists and is executable
+
+
+ServerStop
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   Server(<STRING>)
+
+   Normal Behavior (STRING==Stop)
+      stops SubmitServer.pl from running
+   Exceptions
+      SubmitServer.pl is not running, error returned
+      unable to stop SubmitServer.pl, error returned
+   Assumptions
+      none
+
+ServerStatus
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   Server(<STRING>)
+
+   Normal Behavior (STRING==Status)
+      returns the status of the Server <[UP][DOWN]>
+   Exceptions
+      none
+   Assumptions
+      grep, ps and cat are available system tools
+
+
+
+PasswordGenerateALL
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   For all /Students/*
+
+      PassGenerate(<STRING>)
+
+   
+
+PasswordGenerate(<STRING>)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   PassGenerate(<STRING>)
+
+   Normal Behavior
+      removes all passwords associated with Student (STRING)
+      and generates a new list.txt of passwords according to passwordConfig.txt
+
+   Exceptions
+      /Student/ folder exists
+      /Student/(STRING)/ folder exists
+   Assumptions
+      Perl Module PassMod.pm exists
+
+
+ClearPasswordALL
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   Normal Behavior
+   For all /Students/*(STRING)
+      removes all passwords associated with Student/(STRING)
+
+   Exceptions
+      /Student/ folder exists
+      /Student/(STRING)/ folder exists
+   Assumptions
+      Perl Module PassMod.pm exists
+   
+
+ClearPassword(<STUDENT_NAME>)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   Normal Behavior
+      removes all passwords associated with (STUDENT_NAME)
+
+   Exceptions
+      /Student/ folder exists
+      /Student/(STUDENT_NAME)/ folder exists
+   Assumptions
+      Perl Module PassMod.pm exists
+
+
+ReportSimple(<COURSE><ASSIGNMENT>)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+   Normal Behavior
+      Generate a summay.txt file with the results of the (COURSE),(ASSIGNMENT) tests
+         and an errors.txt file for all students in (COURSE) with details of the tests
+      Displays that summary.txt file
+   Exceptions
+
+   Assumptions
+      (COURSE) and (ASSIGNMENTS) are defined in
+         config/CourseConfig.txt
+      and
+         config/(COURSE_NAME)/(COURSE_NAME).txt
+
+   
+
+
+ReportDetails(<COURSE><ASSIGNMENT><STUDENT_NAME>)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Normal Behavior
+      Generate an summay.txt file with the results of the (COURSE),(ASSIGNMENT) tests
+         and an errors.txt file for all students in (COURSE) with details of the tests
+      Displays the errors.txt file for (STUDENT_NAME)
+
+   Exceptions
+
+   Assumptions
+      (COURSE) and (ASSIGNMENTS) are defined in
+         config/CourseConfig.txt
+      and
+         config/(COURSE_NAME)/(COURSE_NAME).txt
+
+      (STUDENT_NAME) is enrolled in (COURSE)
+   
+
+
+
+Exceptions
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+Assumptions
+++++++++++++
+
+--The type of file submitted will be constant, hard coded and any possible
+   programs required to determine the output of the files will be available
+
+eg. all student files will be .pl and will be tested via "perl *.pl"
+
+--This program will be run on a Linux box, with the following system commands available:
+   mkidr
+   diff
+   grep
+   touch
+   regex
+   perl
+   make
+
+
+--User will NOT modify any files, or folders within the core program directories
+   (/config/* is exempt)
+
+--User will modify any configurations by editing the /config/* files
+
+--CourseConfig.txt will be formatted as follows:
+<COURSE>\n
+
+eg.
+
+course1
+course2
+course3
+
+--/config/<COURSENAME>/<COURSENAME.TXT> will be formatted as follows:
+<ASSIGNMENT>:<DUEDATE>\n
+
+eg.
+
+/config/course1/course1.txt
+assignmnet1:duedate
+assignment2:duedate
+
+--/config/StudentConfig.txt will be formatted as follows
+<STUDENTNAME>:<ENROLLED_COURSE><ENROLLED_COURSE><...>\n
+
+eg.
+doejohn:course1:course2
+doejane:course3
+
+--/config/passwordConfig.txt will be formatted as follows
+Length:<LENGTH>
+Type:<[alnum][num]>
+Number:<NUMBER>
+
+eg.
+Length:12
+Type:alnum
+Number:25
+
+If any of these assumptions are violated, the program will terminate.
+   A backup of DEFAULT configs will be supplied in .config/
+
