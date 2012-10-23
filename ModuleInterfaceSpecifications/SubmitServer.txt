@@ -2,14 +2,16 @@ Submit Server Interface Specification
 
 This module receives and processes assignment submissions from students. 
 
-This program will receive a course number, user id, password, and assignment name 
-from a client via socket connection. It will pass the user name & password to the 
-password verifier module to be checked. It will then check that user’s enrollment 
-in the course. Next it will verify the assignment name matches one of the course’s 
-assignments. Finally it will check that the server’s current date & time is before
- the assignment’s due date. If any of these checks fail, the server will print out 
-an error and close the connection with the client. Otherwise, it will now send the 
-client the all-clear, and wait for the assignment. Once the assignment is received, 
-it will store it in that user’s instance inside the assignment directory. The server 
-then closes the socket and waits for next client connection.
+This program will receive a course number, user id, password, and 
+assignment name from a client via socket connection. It will pass the 
+user name & password to the password verifier module to be checked. It 
+will then check that user’s enrollment in the course. Next it will 
+verify the assignment name matches one of the course’s assignments. 
+Finally it will check that the server’s current date & time is before
+the assignment’s due date. If any of these checks fail, the server will 
+print out an error and close the connection with the client. Otherwise, 
+it will now send the client the all-clear, and wait for the assignment. 
+Once the assignment is received, it will store it in that user’s 
+instance inside the assignment directory. The server then closes the 
+socket and waits for next client connection.
 
