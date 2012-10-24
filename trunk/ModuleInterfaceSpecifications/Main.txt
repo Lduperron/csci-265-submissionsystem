@@ -9,18 +9,18 @@ This perl program will not accept any command line arguments
 
 eg.
 
-$ main <CR>
+$ ./main <CR>
 
 
-At start up, This program will read config files from /config/
+At start up, This program will read config files from config/
 
-   1) /config/CourseConfig.txt
+   1) config/CourseConfig.txt
 
-   2) /config/<COURSENAME>/<COURSENAME.TXT>
+   2) config/courses/<COURSENAME.txt>
 
-   3) /config/StudentConfig.txt
+   3) config/StudentConfig.txt
 
-   4) /PasswordConfig.txt
+   4) PasswordConfig.txt
 
 From these config files, main will set program variable, and create ALL
 directory's required by this program:
@@ -61,7 +61,7 @@ ServerStop
    Server(<STRING>)
 
    Normal Behavior (STRING==Stop)
-      stops SubmitServer.pl from running
+      stops SubmitServer.pl if running
    Exceptions
       SubmitServer.pl is not running, error returned
       unable to stop SubmitServer.pl, error returned
@@ -98,8 +98,8 @@ PasswordGenerate(<STRING>)
       and generates a new list.txt of passwords according to passwordConfig.txt
 
    Exceptions
-      /Student/ folder exists
-      /Student/(STRING)/ folder exists
+      /Student/ folder does not exist
+      /Student/(STRING)/ folder does not exist
    Assumptions
       Perl Module PassMod.pm exists
 
@@ -111,8 +111,8 @@ ClearPasswordALL
       removes all passwords associated with Student/(STRING)
 
    Exceptions
-      /Student/ folder exists
-      /Student/(STRING)/ folder exists
+      /Student/ folder does not exist
+      /Student/(STRING)/ folder does not exist
    Assumptions
       Perl Module PassMod.pm exists
    
@@ -123,8 +123,8 @@ ClearPassword(<STUDENT_NAME>)
       removes all passwords associated with (STUDENT_NAME)
 
    Exceptions
-      /Student/ folder exists
-      /Student/(STUDENT_NAME)/ folder exists
+      /Student/ folder does not exist
+      /Student/(STUDENT_NAME)/ folder does not exist
    Assumptions
       Perl Module PassMod.pm exists
 
@@ -133,11 +133,12 @@ ReportSimple(<COURSE><ASSIGNMENT>)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
    Normal Behavior
-      Generate a summay.txt file with the results of the (COURSE),(ASSIGNMENT) tests
+      Generate a summary.txt file with the results of the (COURSE),(ASSIGNMENT) tests
          and an errors.txt file for all students in (COURSE) with details of the tests
       Displays that summary.txt file
    Exceptions
-
+   	  Course or Assignment does not exist.
+   	  Unable to create summary.txt or errors.txt.
    Assumptions
       (COURSE) and (ASSIGNMENTS) are defined in
          config/CourseConfig.txt
@@ -150,12 +151,13 @@ ReportSimple(<COURSE><ASSIGNMENT>)
 ReportDetails(<COURSE><ASSIGNMENT><STUDENT_NAME>)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Normal Behavior
-      Generate an summay.txt file with the results of the (COURSE),(ASSIGNMENT) tests
+      Generate an summary.txt file with the results of the (COURSE),(ASSIGNMENT) tests
          and an errors.txt file for all students in (COURSE) with details of the tests
       Displays the errors.txt file for (STUDENT_NAME)
 
    Exceptions
-
+   	  Course, Assignment, or Student does not exist.
+   	  Unable to create summary.txt or errors.txt.
    Assumptions
       (COURSE) and (ASSIGNMENTS) are defined in
          config/CourseConfig.txt
@@ -187,12 +189,12 @@ eg. all student files will be .pl and will be tested via "perl *.pl"
    grep
    touch
    regex
-   perl
+   perl  (> 5.0)
    make
 
 
 --User will NOT modify any files, or folders within the core program directories
-   (/config/* is exempt)
+   (/config/* files are exempt)
 
 --User will modify any configurations by editing the /config/* files
 
@@ -205,17 +207,19 @@ course1
 course2
 course3
 
---/config/<COURSENAME>/<COURSENAME.TXT> will be formatted as follows:
+--/config/courses/<COURSENAME.txt> will be formatted as follows:
 <ASSIGNMENT>:<DUEDATE>\n
+DUEDATE format is YYYYMMDD
+or should we make this YYYY:MM:DD so that we can split it as well
 
 eg.
 
-/config/course1/course1.txt
-assignmnet1:duedate
-assignment2:duedate
+/config/courses/course1.txt
+assignment1:20121101
+assignment2:20121212
 
 --/config/StudentConfig.txt will be formatted as follows
-<STUDENTNAME>:<ENROLLED_COURSE><ENROLLED_COURSE><...>\n
+<STUDENTNAME>:<ENROLLED_COURSE>:<ENROLLED_COURSE><...>\n
 
 eg.
 doejohn:course1:course2
@@ -232,5 +236,5 @@ Type:alnum
 Number:25
 
 If any of these assumptions are violated, the program will terminate.
-   A backup of DEFAULT configs will be supplied in .config/
+   A backup of DEFAULT configs will be supplied in .config/backups
 
