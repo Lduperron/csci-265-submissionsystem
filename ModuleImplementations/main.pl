@@ -14,6 +14,7 @@ use strict;
 use warnings;
 
 use FindBin;
+use lib "$FindBin::Bin"; # Adds the module folder into the libary string so that it can find PasswordGen (in case we're running the script from a different directory
 use lib "$FindBin::Bin/PasswordGen"; #Adds the PasswordGen folder into the libary string so that it can find Session::Token
 use lib "$FindBin::Bin/PasswordGen/Session"; #Adds the PasswordGen/Session folder into the library so that Dynaloader can find its way down the tree to the .so.
                                              # Should be a robust enough work around, as long as the files are kept realitive to each other.   
