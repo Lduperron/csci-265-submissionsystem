@@ -1,12 +1,32 @@
  # In Perl there is no special 'class' definition.  A namespace is a class.
   package Passmod;
- 
+
+BEGIN  # Finds the position of the module.
+{      # Assumes that Session-Token-0.82 is in the same folder.
+   use File::Basename;
+   
+   foreach $include (keys %INC)
+   {
+      if ($include =~ m/Passmod.pm/)
+      {
+         $fpath = $INC{$include};
+         
+         $moduledirectory = dirname($fpath);
+         
+      }
+   }
+}
+
+
+  use lib "$moduledirectory";
+  use lib "$moduledirectory/Session-Token-0.82/lib";
+  use lib "$moduledirectory/Session-Token-0.82/blib/arch";
+  
   use Session::Token;
   use strict;
   use warnings;
   
-  
-  use constant PATH => "../Students/";
+  use constant PATH => "../students/";
   use Tie::File;
   
  
@@ -27,6 +47,7 @@
      
       if(!-d PATH)  # Makes sure the directory of where our passwords are going to be is valid
       { 
+         #return 0;
          system("mkdir ".PATH);
       }
       else
@@ -60,7 +81,8 @@
         
       if(!-d PATH.$target)  # Makes sure the directory of where our passwords are going to be is valid
       { 
-         system("mkdir ".PATH.$target);
+         return 0;
+         #system("mkdir ".PATH.$target);
       }
       
       open($passfile , ">".PATH."$target/$target"."passwordSheet.txt");

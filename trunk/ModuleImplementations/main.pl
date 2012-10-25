@@ -15,8 +15,8 @@ use warnings;
 
 use FindBin;
 use lib "$FindBin::Bin"; # Adds the module folder into the libary string so that it can find PasswordGen (in case we're running the script from a different directory
-use lib "$FindBin::Bin/PasswordGen"; #Adds the PasswordGen folder into the libary string so that it can find Session::Token
-use lib "$FindBin::Bin/PasswordGen/Session"; #Adds the PasswordGen/Session folder into the library so that Dynaloader can find its way down the tree to the .so.
+#use lib "$FindBin::Bin/PasswordGen"; #Adds the PasswordGen folder into the libary string so that it can find Session::Token
+#use lib "$FindBin::Bin/PasswordGen/Session"; #Adds the PasswordGen/Session folder into the library so that Dynaloader can find its way down the tree to the .so.
                                              # Should be a robust enough work around, as long as the files are kept realitive to each other.   
 
 use IO::File;
@@ -238,6 +238,7 @@ sub Pass
    chomp($sName);  # Needs to take off the newline before sending it for password generation
    
    my $pass = Passmod->new();
+   print $pass;
    #$pass->setSetting("length",$passLength);  # Just commented out for testing.
    #$pass->setSetting("type",$passType);
    #$pass->setSetting("number",$passNumber);

@@ -1,12 +1,37 @@
  # In Perl there is no special 'class' definition.  A namespace is a class.
   package Passmod;
  
+  #use lib "$ENV{HOME}/lib/x86_64-linux-gnu-thread-multi/";
+  #use FindBin;
+  #FindBin::again();
+  #use lib "$FindBin::Bin";
+  
+  #use lib "~/lib/x86_64-linux-gnu-thread-multi/";
+  #use lib "/home/student/duperrlc/lib/x86_64-linux-gnu-thread-multi/";
+   
+BEGIN
+{
+   use File::Basename;
+   
+   foreach $include (keys %INC)
+   {
+      if ($include =~ m/Passmod.pm/)
+      {
+         $fpath = $INC{$include};
+         
+         $moduledirectory = dirname($fpath);
+         
+      }
+   }
+}
+
+
+  use lib $moduledirectory;
   use Session::Token;
   use strict;
   use warnings;
   
-  
-  use constant PATH => "../Students/";
+  use constant PATH => "../students/";
   use Tie::File;
   
  
@@ -27,6 +52,7 @@
      
       if(!-d PATH)  # Makes sure the directory of where our passwords are going to be is valid
       { 
+         #return 0;
          system("mkdir ".PATH);
       }
       else
@@ -60,7 +86,8 @@
         
       if(!-d PATH.$target)  # Makes sure the directory of where our passwords are going to be is valid
       { 
-         system("mkdir ".PATH.$target);
+         return 0;
+         #system("mkdir ".PATH.$target);
       }
       
       open($passfile , ">".PATH."$target/$target"."passwordSheet.txt");
