@@ -8,15 +8,20 @@
 #
 
 
-
 $| = 1;
 
-#use strict;
+use strict;
 use warnings;
+
+use FindBin;
+use lib "$FindBin::Bin/PasswordGen"; #Adds the PasswordGen folder into the libary string so that it can find Session::Token
+use lib "$FindBin::Bin/PasswordGen/Session"; #Adds the PasswordGen/Session folder into the library so that Dynaloader can find its way down the tree to the .so.
+                                             # Should be a robust enough work around, as long as the files are kept realitive to each other.   
 
 use IO::File;
 use File::Path 'make_path';
-#use PasswordGen::Passmod;
+use PasswordGen::Passmod;
+
 #use Report;
 
 #constant options
@@ -224,14 +229,17 @@ sub Pass
 {
    my $sName;
    $sName = shift;
-
+   
    #verify $sName is a valid student
       # if not valid, return 0
-
-   $pass = Passmod->new();
-   $pass->setSetting("length",$passLength);
-   $pass->setSetting("type",$passType);
-   $pass->setSetting("number",$passNumber);
+      
+      
+   chomp($sName);  # Needs to take off the newline before sending it for password generation
+   
+   my $pass = Passmod->new();
+   #$pass->setSetting("length",$passLength);  # Just commented out for testing.
+   #$pass->setSetting("type",$passType);
+   #$pass->setSetting("number",$passNumber);
 
    if($sName eq "all"){
       $sName = "all";
@@ -251,8 +259,8 @@ sub clearPass
 
    #verify $sName is a valid student
       # if not valid return 1
-
-   $pass = Passmod->new();
+      
+   my $pass = Passmod->new();
    $pass->setSetting("length",$passLength);
    $pass->setSetting("type",$passType);
    $pass->setSetting("number",0);
