@@ -1,8 +1,6 @@
  # In Perl there is no special 'class' definition.  A namespace is a class.
   package Passmod;
  
-  $| = 1;
- 
   use Session::Token;
   use strict;
   use warnings;
