@@ -1,1 +1,6 @@
-#to be done
+submit : UserClient.pl
+	echo "#!/usr/bin/perl" > submit
+	cat UserClient.pl >> submit
+	chmod a+x submit
+clean :
+	@rm submit
