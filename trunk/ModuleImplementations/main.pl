@@ -3,7 +3,7 @@
 #  1 = sucsess
 #  0 = fail
 #
-#  functions return sucsess status. ie. (1 == good)
+#  functions return success status. ie. (1 == good)
 #
 #
 
@@ -15,13 +15,10 @@ use warnings;
 
 use FindBin;
 use lib "$FindBin::Bin"; # Adds the module folder into the libary string so that it can find PasswordGen (in case we're running the script from a different directory
-#use lib "$FindBin::Bin/PasswordGen"; #Adds the PasswordGen folder into the libary string so that it can find Session::Token
-#use lib "$FindBin::Bin/PasswordGen/Session"; #Adds the PasswordGen/Session folder into the library so that Dynaloader can find its way down the tree to the .so.
-                                             # Should be a robust enough work around, as long as the files are kept realitive to each other.   
 
 use IO::File;
 use File::Path 'make_path';
-use PasswordGen::Passmod;
+use Mod::Passmod;
 
 #use Report;
 
@@ -44,7 +41,7 @@ my $EXIT="EXIT";
 my $H="H";
 my $HELP="HELP";
 
-# define all config varibales used
+# define all config variables used
 my $passLength;
 my $passType;
 my $passNumber;
@@ -62,7 +59,6 @@ my $passNumber;
 #           doesn't exist.
 #----------------------------------------------------------------------
 
-
 # Define default paths
    my $root = "../";
    my $configPath = $root . "config/";
@@ -73,10 +69,15 @@ my $passNumber;
    my $docsPath = $root . "docs/";
 
 # Define config filenames
-   my $studentsConf = $configPath . "StudentConfig.txt";		# studentname:enrolled_course:...\n
-   my $coursesConf = $configPath . "CourseConfig.txt";			# coursename\n
-   my $passwordConf = $configPath . "PasswordConfig.txt";		# Length:<LENGTH>\n Type:<[alnum,num]>\n Number:<Number>
+   my $studentsConf = $configPath . "StudentConfig.txt";	# studentname:enrolled_course:...\n
+   my $coursesConf = $configPath . "CourseConfig.txt";		# coursename\n
+   my $passwordConf = $configPath . "PasswordConfig.txt";	# Length:<LENGTH>\n Type:<[alnum,num]>\n Number:<Number>
 
+# Define default settings for make_path
+   my $verbose = 1;		# 1 = print name of dir when created, 0 = do not print dir
+   my $mode = "0711";		# TODO: what does this mean? - user full, group read, everyone read?
+   my $mpOptions = "{verbose => $verbose, mode => $mode}";
+   print $mpOptions;
 # read Courses Config file
    open(my $courses, "<", $coursesConf)
 	or die("Unable to open file ". $coursesConf);
@@ -85,7 +86,7 @@ my $passNumber;
    while (<$courses>) {
 	   my $course = $_;
 	   chomp($course);
-	   make_path($coursesPath.$course, {verbose => 1, mode => 0711});
+	   make_path($coursesPath.$course, $mpOptions);
 
 	# read assignments file for current course
 	   open(my $assignments, "<", $assignmentsPath.$course.".txt")
@@ -95,8 +96,8 @@ my $passNumber;
 	   while (<$assignments>) {
 		   my @assignment = split(':', $_);
 		   my $assignment = shift(@assignment);
-		   make_path($coursesPath.$course."/".$assignment."/tinp", {verbose => 1, mode => 0711});
-		   make_path($coursesPath.$course."/".$assignment."/texp", {verbose => 1, mode => 0711});
+		   make_path($coursesPath.$course."/".$assignment."/tinp", $mpOptions);
+		   make_path($coursesPath.$course."/".$assignment."/texp", $mpOptions);
 	   }
    }
 
@@ -109,7 +110,7 @@ my $passNumber;
 	   my @student = split(':', $_);
 	   my $student = shift(@student);
 	   chomp($student);
-	   make_path($studentsPath.$student, {verbose => 1, mode => 0711});
+	   make_path($studentsPath.$student, $mpOptions);
 
 	# process enrolled courses and create relevant student directories	
 	   while (my $course = shift(@student)) {
@@ -122,7 +123,7 @@ my $passNumber;
 		   while (<$assignments>) {
 			   my @assignment = split(':', $_);
 			   my $assignment = shift(@assignment);
-			   make_path($coursesPath.$course."/".$assignment."/".$student."/tact", {verbose => 1, mode => 0711});
+			   make_path($coursesPath.$course."/".$assignment."/".$student."/tact", $mpOptions);
 		   }
 	   }
    }
@@ -167,10 +168,10 @@ my $passNumber;
          print "New passwords will be generated for all students\n";
          &Pass("all");
       }elsif($input eq $PASSGEN){
-         print "generate new passwords for student:\n";
+         print "Generate new passwords for student:\n";
          while(<>){
             if(&Pass($_) == 0){
-# it failed, bad input
+               # it failed, bad input, loop again
             }else{
                last;
             }
@@ -206,23 +207,130 @@ my $passNumber;
    }
 #}
 #------Helper Methods--------------------------------------------------
-
+#----------------------------------------------------------------------
+#		Server
+#		Start, Stop and show status of Submit Server
+#----------------------------------------------------------------------
 sub Server
 {
+# Define Submit Server defaults
+	my $submitSvrName = "Mod/SubmitServer.pl";
+	my $svrPidFileName = "SubmitServer.pid";
+	my $startSvrCmd = "./". $submitSvrName . " &";
+	my $getPidCmd = "pidof -s /usr/bin/perl ". $submitSvrName ." > ";
+	my $showSvrPidCmd = "cat ". $svrPidFileName;
+
    my $arg = shift;
 
    if($arg eq "start"){
-print "not implemented START yet\n";
+   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
+   	# if the server is running
+			print "Server is already running\n";
+			return 1;
+		}
 
+		# fork the process so that we can start the server in the background
+		my $pid = fork();
+
+		if (not defined $pid) {
+			print "Unable to start Submit Server. No resources available.\n";
+			return 1;
+		} elsif ($pid == 0) {
+			# get the process id of Submit Server
+			system($getPidCmd . $svrPidFileName);
+			exit(0);
+		} else {
+			# start Submit Server in background
+			system($startSvrCmd);
+			waitpid($pid,0);
+		}
+
+   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
+   	# if the server is running
+			print "Server started as process ";
+			system($showSvrPidCmd);
+			print "\n";
+		} else {
+			print "Server failed to start\n";
+		}
+		return 1;
+				
    }elsif($arg eq "stop"){
-print "not implemented STOP yet\n";
+		my $pid;
+		# check if server not already running
+   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
+   	# if the server is running
+			open(my $svrFile, "<", $svrPidFileName)
+				or die("Unable to verify if Submit Server is running.  Please contact support\n"); 
 
+			my @pid = <$svrFile>;
+			$pid = @pid;
+			chomp($pid);
+			close($svrPidFileName);
+			
+			kill('TERM', $pid);				# try to stop it using TERM first - it's cleaner
+			unlink($svrPidFileName);		# get rid of the server pid file    
+			sleep(2);							# wait 2 secs to see if it terminates
+		} else {
+			print "Submit Server is not running\n"; 
+			return 1; 
+		}	
+
+		# check if kill worked
+		if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
+		# if the server is running
+			kill('KILL', $pid);					# kill it - forcefully
+		}
+		unlink($svrPidFileName);			# get rid of the server pid file    
+		print "Submit Server stopped\n";
+		return 1;
+		
    }elsif($arg eq "stat"){
-print "not implemented STATUS yet\n";
+   	# get Submit Server Status
+   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {
+		# if the server is running
+			print "Submit Server [RUNNING] at process id ";
+			system($showSvrPidCmd);
+			print "\n";
+		} else {
+			print "Submit Server [STOPPED]\n";
+		}
+		return 1;
+
    }else{
       return -1;
    }
    return 1;
+}
+#----------------------------------------------------------------------
+#		getSvrStatus
+#		return 1 if server is running, else 0
+#----------------------------------------------------------------------
+sub getSvrStatus {
+	my $chkPidFileName = "check.pid";
+	my $submitSvrName = $_[0];
+	my $svrPidFileName =  $_[1];
+	my $getPidCmd =  $_[2];
+
+# put the running server pid into a check file
+	my @args = ($getPidCmd, $chkPidFileName);
+	system(@args);
+
+	if (-e $chkPidFileName) {				# if the file was created
+		if (-z $chkPidFileName) {			# but its empty - there's no server
+			if (-e $svrPidFileName) {		# if the server pid file exists
+				unlink ($svrPidFileName);	# delete it - there's no server
+				unlink($chkPidFileName);	# get rid of temp file
+				return 0;
+			}
+		} else {		# the check file is not empty
+			# we have a server running!
+			move($chkPidFileName, $svrPidFileName);	# rename the file, 
+																	# will clobber existing svr file
+			return 1;
+		}
+	}
+	return 0;		# no server found
 }
 
  
@@ -230,52 +338,86 @@ sub Pass
 {
    my $sName;
    $sName = shift;
-   
-   #verify $sName is a valid student
-      # if not valid, return 0
-      
-      
-   chomp($sName);  # Needs to take off the newline before sending it for password generation
-   
+
+   chomp($sName);
+
    my $pass = Passmod->new();
-   print $pass;
-   #$pass->setSetting("length",$passLength);  # Just commented out for testing.
-   #$pass->setSetting("type",$passType);
-   #$pass->setSetting("number",$passNumber);
+   $pass->setSetting("length",$passLength);
+   $pass->setSetting("type",$passType);
+   $pass->setSetting("number",$passNumber);
+   $pass->setSetting("carboncopy",0);
+
+   open(my $students, "<", $studentsConf)
+	   or die("Unable to open file ". $studentsConf);
 
    if($sName eq "all"){
-      $sName = "all";
-      #for all student in /config/stuendt.txt
-      $pass->generate($sName);
-   }else{
-      $pass->generate($sName);
-   }
+      while (<$students>) {
+	      my @student = split(':', $_);
+	     $sName = shift(@student);
+	      chomp($sName);
+         if($pass->generate($sName)){
 
-   0;
+         }else{
+            print "Error generating passwords for student $sName\n";
+         }
+      }
+      return 1;
+   }else{
+      while (<$students>) {
+	      my @student = split(':', $_);
+	      my $tmpStudent = shift(@student);
+	      chomp($tmpStudent);
+         if($sName eq $tmpStudent){
+            $pass->generate($sName);
+            return 1;
+         }
+      }
+      print "Error generating passwords for student $sName\n";
+      return 0;
+   }
 }
 
 sub clearPass
 {
    my $sName;
-   $sName = shift @_;
+   $sName = shift;
 
-   #verify $sName is a valid student
-      # if not valid return 1
-      
+   chomp($sName);
+
    my $pass = Passmod->new();
    $pass->setSetting("length",$passLength);
    $pass->setSetting("type",$passType);
    $pass->setSetting("number",0);
+   $pass->setSetting("carboncopy",0);
+
+   open(my $students, "<", $studentsConf)
+	   or die("Unable to open file ". $studentsConf);
 
    if($sName eq "all"){
-      $sName = "all";
-      #for all student in /config/stuendt.txt
-      $pass->generate($sName);
-   }else {
-      $pass->generate($sName);
-   }
+      while (<$students>) {
+	      my @student = split(':', $_);
+	     $sName = shift(@student);
+	      chomp($sName);
+         if($pass->generate($sName)){
 
-   return 0;
+         }else{
+            print "Error generating passwords for student $sName\n";
+         }
+      }
+      return 1;
+   }else{
+      while (<$students>) {
+	      my @student = split(':', $_);
+	      my $tmpStudent = shift(@student);
+	      chomp($tmpStudent);
+         if($sName eq $tmpStudent){
+            $pass->generate($sName);
+            return 1;
+         }
+      }
+      print "Error generating passwords for student $sName\n";
+      return 0;
+   }
 }
 
 
@@ -296,23 +438,30 @@ sub Report
 
 sub printHelp
 {
-   print "This is the Main Administrive interface to the SubmitionsSystem\n";
+	print "\033[2J";    		#clear the screen
+	print "\033[0;0H"; 		#jump to 0,0
 
-   print "The following commands are recognized\n";
-   print "Enter $SERVSTA to start the Submition Server\n";
-   print "Enter $SERVSTO to stop the Submition Server\n";
-   print "Enter $SERVSTAT to display the current status of the Submition Server\n";
-   print "Enter $PASSGENALL to generate NEW passwords for all students\n";
-   print "Enter $PASSGEN to generate NEW passwords for a single student\n";
+   print "__________________________________________________________________________\n\n";
+   print "           Submission System  -  Main Administrative Interface\n";
+   print "__________________________________________________________________________\n";
+   print "The following commands are recognized:\n\n";
+   
+   print "$SERVSTA \tStart the Submission Server\n";
+   print "$SERVSTO \tStop the Submission Server\n";
+   print "$SERVSTAT \tDisplay the current status of the Submission Server\n\n";
+   
+   print "$PASSGENALL \tGenerate NEW passwords for ALL students\n";
+   print "$PASSGEN \tGenerate NEW passwords for a SINGLE student\n\n";
 
-   print "Enter $CPASSALL to clear all passwords for all students\n";
-   print "Enter $CPASS to clear all passwords for a single student\n";
+   print "$CPASSALL \tClear all passwords for ALL students\n";
+   print "$CPASS \t\tClear all passwords for a SINGLE student\n\n";
 
-   print "Enter $REPS to display the summary results of an assignment report\n";
-   print "Enter $REPD to display the detailed results of an assignment report\n";
+   print "$REPS \tDisplay the SUMMARY results of an assignment report\n";
+   print "$REPD \t\tDisplay the DETAILED results of an assignment report\n\n";
 # what is the name of this exectutable? (main.pl)
-   print "Enter $QUIT to quit the AdminClient\n";
-   print "Enter $HELP to display this message\n";
+   print "$QUIT \t\tQuit the Admin Client\n";
+   print "$HELP \t\tDisplay this message\n";
+   print "__________________________________________________________________________\n";
 
    return 0;
 }

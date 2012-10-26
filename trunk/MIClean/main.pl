@@ -168,10 +168,10 @@ my $passNumber;
          print "New passwords will be generated for all students\n";
          &Pass("all");
       }elsif($input eq $PASSGEN){
-         print "generate new passwords for student:\n";
+         print "Generate new passwords for student:\n";
          while(<>){
             if(&Pass($_) == 0){
-# it failed, bad input
+               # it failed, bad input, loop again
             }else{
                last;
             }
@@ -214,8 +214,8 @@ my $passNumber;
 sub Server
 {
 # Define Submit Server defaults
-	my $submitSvrName = "passServer";
-	my $svrPidFileName = "passServer.pid";
+	my $submitSvrName = "Mod/SubmitServer.pl";
+	my $svrPidFileName = "SubmitServer.pid";
 	my $startSvrCmd = "./". $submitSvrName . " &";
 	my $getPidCmd = "pidof -s /usr/bin/perl ". $submitSvrName ." > ";
 	my $showSvrPidCmd = "cat ". $svrPidFileName;
@@ -338,51 +338,86 @@ sub Pass
 {
    my $sName;
    $sName = shift;
-   
-   #verify $sName is a valid student
-      # if not valid, return 0
-      
-      
-   chomp($sName);  # Needs to take off the newline before sending it for password generation
-   
+
+   chomp($sName);
+
    my $pass = Passmod->new();
-   #$pass->setSetting("length",$passLength);  # Just commented out for testing.
-   #$pass->setSetting("type",$passType);
-   #$pass->setSetting("number",$passNumber);
+   $pass->setSetting("length",$passLength);
+   $pass->setSetting("type",$passType);
+   $pass->setSetting("number",$passNumber);
+   $pass->setSetting("carboncopy",0);
+
+   open(my $students, "<", $studentsConf)
+	   or die("Unable to open file ". $studentsConf);
 
    if($sName eq "all"){
-      $sName = "all";
-      #for all student in /config/stuendt.txt
-      $pass->generate($sName);
-   }else{
-      $pass->generate($sName);
-   }
+      while (<$students>) {
+	      my @student = split(':', $_);
+	     $sName = shift(@student);
+	      chomp($sName);
+         if($pass->generate($sName)){
 
-   0;
+         }else{
+            print "Error generating passwords for student $sName\n";
+         }
+      }
+      return 1;
+   }else{
+      while (<$students>) {
+	      my @student = split(':', $_);
+	      my $tmpStudent = shift(@student);
+	      chomp($tmpStudent);
+         if($sName eq $tmpStudent){
+            $pass->generate($sName);
+            return 1;
+         }
+      }
+      print "Error generating passwords for student $sName\n";
+      return 0;
+   }
 }
 
 sub clearPass
 {
    my $sName;
-   $sName = shift @_;
+   $sName = shift;
 
-   #verify $sName is a valid student
-      # if not valid return 1
-      
+   chomp($sName);
+
    my $pass = Passmod->new();
    $pass->setSetting("length",$passLength);
    $pass->setSetting("type",$passType);
    $pass->setSetting("number",0);
+   $pass->setSetting("carboncopy",0);
+
+   open(my $students, "<", $studentsConf)
+	   or die("Unable to open file ". $studentsConf);
 
    if($sName eq "all"){
-      $sName = "all";
-      #for all student in /config/stuendt.txt
-      $pass->generate($sName);
-   }else {
-      $pass->generate($sName);
-   }
+      while (<$students>) {
+	      my @student = split(':', $_);
+	     $sName = shift(@student);
+	      chomp($sName);
+         if($pass->generate($sName)){
 
-   return 0;
+         }else{
+            print "Error generating passwords for student $sName\n";
+         }
+      }
+      return 1;
+   }else{
+      while (<$students>) {
+	      my @student = split(':', $_);
+	      my $tmpStudent = shift(@student);
+	      chomp($tmpStudent);
+         if($sName eq $tmpStudent){
+            $pass->generate($sName);
+            return 1;
+         }
+      }
+      print "Error generating passwords for student $sName\n";
+      return 0;
+   }
 }
 
 
