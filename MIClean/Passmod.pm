@@ -47,8 +47,8 @@ BEGIN  # Finds the position of the module.
      
       if(!-d PATH)  # Makes sure the directory of where our passwords are going to be is valid
       { 
-         #return 0;
-         system("mkdir ".PATH);
+         return 0;
+         #system("mkdir ".PATH);
       }
       else
       {
@@ -79,13 +79,13 @@ BEGIN  # Finds the position of the module.
     {
         $target = shift;
         
-      if(!-d PATH.$target)  # Makes sure the directory of where our passwords are going to be is valid
+      if(!-d PATH)  # Makes sure the directory of where our passwords are going to be is valid
       { 
          return 0;
          #system("mkdir ".PATH.$target);
       }
       
-      open($passfile , ">".PATH."$target/$target"."passwordSheet.txt");
+      open($passfile , ">".PATH."$target"."passwordSheet.txt");
       
       for(my $i = 0; $i < $self->{number}; $i++)
       {
@@ -101,7 +101,7 @@ BEGIN  # Finds the position of the module.
             system("mkdir ".PATH."Passwords/");
          }
          
-         my $originalpath = PATH."$target/$target"."passwordSheet.txt";
+         my $originalpath = PATH."$target"."passwordSheet.txt";
          my $copypath = PATH."Passwords/$target"."passwordSheet.txt";
          system("cp $originalpath $copypath");
          
@@ -130,10 +130,10 @@ BEGIN  # Finds the position of the module.
    my $realpass;
    my @temparray;
    
-   if(-e PATH."$name/$name"."passwordSheet.txt")
+   if(-e PATH."$name"."passwordSheet.txt")
    {
    
-      tie @temparray, 'Tie::File', PATH."$name/$name"."passwordSheet.txt" or die;
+      tie @temparray, 'Tie::File', PATH."$name"."passwordSheet.txt" or die;
       
       $realpass = $temparray[0];
       
