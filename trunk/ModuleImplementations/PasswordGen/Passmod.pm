@@ -1,16 +1,8 @@
  # In Perl there is no special 'class' definition.  A namespace is a class.
   package Passmod;
- 
-  #use lib "$ENV{HOME}/lib/x86_64-linux-gnu-thread-multi/";
-  #use FindBin;
-  #FindBin::again();
-  #use lib "$FindBin::Bin";
-  
-  #use lib "~/lib/x86_64-linux-gnu-thread-multi/";
-  #use lib "/home/student/duperrlc/lib/x86_64-linux-gnu-thread-multi/";
-   
-BEGIN
-{
+
+BEGIN  # Finds the position of the module.
+{      # Assumes that Session-Token-0.82 is in the same folder.
    use File::Basename;
    
    foreach $include (keys %INC)
@@ -26,7 +18,10 @@ BEGIN
 }
 
 
-  use lib $moduledirectory;
+  use lib "$moduledirectory";
+  use lib "$moduledirectory/Session-Token-0.82/lib";
+  use lib "$moduledirectory/Session-Token-0.82/blib/arch";
+  
   use Session::Token;
   use strict;
   use warnings;

@@ -75,9 +75,9 @@ my $passNumber;
 
 # Define default settings for make_path
    my $verbose = 1;		# 1 = print name of dir when created, 0 = do not print dir
-   my $mode = "0711";		# TODO: what does this mean? - user full, group read, everyone read?
-   my $mpOptions = "{verbose => $verbose, mode => $mode}";
-   print $mpOptions;
+   my $mode = "0777";		# TODO: what does this mean? - user full, group read, everyone read?
+   my %mpOptions = ("verbose",$verbose);
+   #print {%mpOptions};
 # read Courses Config file
    open(my $courses, "<", $coursesConf)
 	or die("Unable to open file ". $coursesConf);
@@ -86,7 +86,7 @@ my $passNumber;
    while (<$courses>) {
 	   my $course = $_;
 	   chomp($course);
-	   make_path($coursesPath.$course, $mpOptions);
+	   make_path($coursesPath.$course, {%mpOptions});
 
 	# read assignments file for current course
 	   open(my $assignments, "<", $assignmentsPath.$course.".txt")
@@ -96,8 +96,8 @@ my $passNumber;
 	   while (<$assignments>) {
 		   my @assignment = split(':', $_);
 		   my $assignment = shift(@assignment);
-		   make_path($coursesPath.$course."/".$assignment."/tinp", $mpOptions);
-		   make_path($coursesPath.$course."/".$assignment."/texp", $mpOptions);
+		   make_path($coursesPath.$course."/".$assignment."/tinp", {%mpOptions});
+		   make_path($coursesPath.$course."/".$assignment."/texp", {%mpOptions});
 	   }
    }
 
@@ -110,7 +110,7 @@ my $passNumber;
 	   my @student = split(':', $_);
 	   my $student = shift(@student);
 	   chomp($student);
-	   make_path($studentsPath.$student, $mpOptions);
+	   #make_path($studentsPath.$student, {%mpOptions});
 
 	# process enrolled courses and create relevant student directories	
 	   while (my $course = shift(@student)) {
@@ -123,7 +123,7 @@ my $passNumber;
 		   while (<$assignments>) {
 			   my @assignment = split(':', $_);
 			   my $assignment = shift(@assignment);
-			   make_path($coursesPath.$course."/".$assignment."/".$student."/tact", $mpOptions);
+			   make_path($coursesPath.$course."/".$assignment."/".$student."/tact", {%mpOptions});
 		   }
 	   }
    }
