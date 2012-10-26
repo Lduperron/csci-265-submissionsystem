@@ -1,0 +1,19 @@
+#!/bin/csh
+
+set test_count = 0;
+set error_count = 0;
+
+foreach F (tinp/*) 
+    @ test_count++
+    set T = ${F:t}      
+      
+    `cat tinp/$T` >! tact/$T    
+
+    diff texp/$T tact/$T   
+    if ($status) then
+        echo Error in test $test_count
+        @ error_count++
+    endif 
+end
+
+echo $test_count tests were performed with $error_count errors found.
