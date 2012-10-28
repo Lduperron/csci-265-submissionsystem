@@ -1,4 +1,3 @@
 bob:csci261:csci251
 beth:csci260:csci261:csci265
 joe:csci251:csci261:csci265:csci260
-

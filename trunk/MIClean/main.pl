@@ -110,7 +110,6 @@ my $passNumber;
 	   my @student = split(':', $_);
 	   my $student = shift(@student);
 	   chomp($student);
-	   #make_path($studentsPath.$student, {%mpOptions});
 
 	# process enrolled courses and create relevant student directories	
 	   while (my $course = shift(@student)) {
@@ -127,6 +126,8 @@ my $passNumber;
 		   }
 	   }
    }
+# create the folder for storing student passwords
+   make_path($studentsPath, {%mpOptions});
 
 # load Password defaults from config
    open(my $parameters, $passwordConf)
@@ -214,10 +215,10 @@ my $passNumber;
 sub Server
 {
 # Define Submit Server defaults
-	my $submitSvrName = "Mod/SubmitServer.pl";
+	my $submitSvrName = "SubmitServer";
 	my $svrPidFileName = "SubmitServer.pid";
-	my $startSvrCmd = "./". $submitSvrName . " &";
-	my $getPidCmd = "pidof -s /usr/bin/perl ". $submitSvrName ." > ";
+	my $startSvrCmd = "./Mod/$submitSvrName &";
+	my $getPidCmd = "pgrep " . $submitSvrName . " > ";
 	my $showSvrPidCmd = "cat ". $svrPidFileName;
 
    my $arg = shift;
@@ -230,22 +231,22 @@ sub Server
 		}
 
 		# fork the process so that we can start the server in the background
-		my $pid = fork();
+		my $pid = fork();#
 
 		if (not defined $pid) {
 			print "Unable to start Submit Server. No resources available.\n";
 			return 1;
-		} elsif ($pid == 0) {
+		} elsif ($pid == 0) { # code to be executed by the child fork
 			# get the process id of Submit Server
 			system($getPidCmd . $svrPidFileName);
 			exit(0);
-		} else {
+		} else { # code to be executed by the parent fork
 			# start Submit Server in background
 			system($startSvrCmd);
-			waitpid($pid,0);
-		}
+			waitpid($pid,0)
+      }
 
-   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
+   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {
    	# if the server is running
 			print "Server started as process ";
 			system($showSvrPidCmd);
@@ -256,21 +257,22 @@ sub Server
 		return 1;
 				
    }elsif($arg eq "stop"){
-		my $pid;
+		my @pid;
 		# check if server not already running
-   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
+   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {
    	# if the server is running
 			open(my $svrFile, "<", $svrPidFileName)
 				or die("Unable to verify if Submit Server is running.  Please contact support\n"); 
 
-			my @pid = <$svrFile>;
-			$pid = @pid;
-			chomp($pid);
+			@pid = <$svrFile>;
+         
+
+			chomp(@pid);
 			close($svrPidFileName);
 			
-			kill('TERM', $pid);				# try to stop it using TERM first - it's cleaner
+			kill('TERM', @pid);				# try to stop it using TERM first - it's cleaner
 			unlink($svrPidFileName);		# get rid of the server pid file    
-			sleep(2);							# wait 2 secs to see if it terminates
+			sleep(1);							# wait 1 secs to see if it terminates
 		} else {
 			print "Submit Server is not running\n"; 
 			return 1; 
@@ -279,7 +281,13 @@ sub Server
 		# check if kill worked
 		if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
 		# if the server is running
-			kill('KILL', $pid);					# kill it - forcefully
+			kill('KILL', @pid);					# kill it - forcefully
+		}
+      # tripple check the server...
+		if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
+		# if the server is running, and did not TERM, or KILL
+			print "Error stoping server\n";
+         return 0;
 		}
 		unlink($svrPidFileName);			# get rid of the server pid file    
 		print "Submit Server stopped\n";
@@ -311,11 +319,12 @@ sub getSvrStatus {
 	my $submitSvrName = $_[0];
 	my $svrPidFileName =  $_[1];
 	my $getPidCmd =  $_[2];
+   my $MV = "mv"; # system command for moving a file.
 
 # put the running server pid into a check file
-	my @args = ($getPidCmd, $chkPidFileName);
-	system(@args);
-
+	my $args = join('',$getPidCmd,$chkPidFileName);
+	system($args);
+   
 	if (-e $chkPidFileName) {				# if the file was created
 		if (-z $chkPidFileName) {			# but its empty - there's no server
 			if (-e $svrPidFileName) {		# if the server pid file exists
@@ -325,11 +334,12 @@ sub getSvrStatus {
 			}
 		} else {		# the check file is not empty
 			# we have a server running!
-			move($chkPidFileName, $svrPidFileName);	# rename the file, 
-																	# will clobber existing svr file
+			system("$MV $chkPidFileName $svrPidFileName");	# rename the file, 
+											# will clobber existing svr file
 			return 1;
 		}
 	}
+   unlink($chkPidFileName); # get rid of tmp file
 	return 0;		# no server found
 }
 
@@ -356,11 +366,11 @@ sub Pass
 	     $sName = shift(@student);
 	      chomp($sName);
          if($pass->generate($sName)){
-
          }else{
             print "Error generating passwords for student $sName\n";
          }
       }
+      print "Complete\n";
       return 1;
    }else{
       while (<$students>) {
@@ -369,6 +379,7 @@ sub Pass
 	      chomp($tmpStudent);
          if($sName eq $tmpStudent){
             $pass->generate($sName);
+            print "Complete\n";
             return 1;
          }
       }
@@ -401,9 +412,10 @@ sub clearPass
          if($pass->generate($sName)){
 
          }else{
-            print "Error generating passwords for student $sName\n";
+            print "Error clearing passwords for student $sName\n";
          }
       }
+      print "Complete\n";
       return 1;
    }else{
       while (<$students>) {
@@ -412,10 +424,11 @@ sub clearPass
 	      chomp($tmpStudent);
          if($sName eq $tmpStudent){
             $pass->generate($sName);
+            print "Complete\n";
             return 1;
          }
       }
-      print "Error generating passwords for student $sName\n";
+      print "Error clearing passwords for student $sName\n";
       return 0;
    }
 }

@@ -15,8 +15,12 @@ stage:
 	chmod +x ../StageArea/bin/main
 
 	cp MIClean/Passmod.pm ../StageArea/bin/Mod/Passmod.pm
-	cp MIClean/SubmitServer.pl ../StageArea/bin/Mod/SubmitServer.pl
+	cp MIClean/SubmitServer.pl ../StageArea/bin/Mod/SubmitServer
+	chmod +x ../StageArea/bin/Mod/SubmitServer
 
 clean:
 	rm -f -r ../StageArea
    
+cleanStage:
+	make clean
+	make stage
