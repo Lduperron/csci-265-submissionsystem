@@ -19,7 +19,7 @@ while($coursecounter < $numOfCases)
       ./$line >> ./student/$3/tact/$coursecounter.txt
     #  if({ ../../bin/regex ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } == 0) then
          
-     if({ diff ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } != 0) then
+     if({ diff -f ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } != 0) then
          @ errorCount++
          diff ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt >> ./student$3/errors.txt
       endif
