@@ -6,40 +6,18 @@
 set course = $1
 set assignement  = $2
 set sName = $3
-#set isDetailed = $4
-#if($isDetailed != 1) then
-#   @ isDetailed = 0
-#endif
-set errorCount = 0
+set isDetailed = $4
+if($isDetailed != 1) then
+   @ isDetailed = 0
+endif
+rm -f tmpreport.txt
+(./report_evaluate.csch $1 $2 $3) >> tmp.txt
+rm -f tmpreport.txt
 cd ../course/$1/assignment/$2/student/$3
-cd tact
-rm -f *
-cd ../
-rm -f errors.txt
-rm -f summary.txt
-make
-cd ../../
-set numOfCases = `ls -l tinp | wc -l`
-@ numOfCases-- 
-set coursecounter = 0;
-while($coursecounter <= $numOfCases)
-   foreach line(cat ./tinp/$coursecounter.txt)
-      ./student/$3/$line >> ./student/$3/tact/$coursecounter.txt
-    #  if({ ../../bin/regex ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } == 0) then
-         
-     if({ diff -f ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } != 0) then
-         @ errorCount++
-         diff ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt >> ./student/$3/errors.txt
-      endif
-      @ coursecounter++
-   end
-end
-cd ./student/$3
-echo "Number of test cases ran: $numOfCases" >> summary.txt
-echo "Number of errors encountered: $errorCount" >> summary.txt
-#if($isDetailed) then
-#   less errors.txt
-#else
-#   cat summary.txt
+
+if($isDetailed) then
+   less errors.txt
+else
+   cat summary.txt
 endif
             
