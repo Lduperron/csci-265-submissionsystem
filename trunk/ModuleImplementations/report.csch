@@ -22,7 +22,7 @@ cd ../../
 set numOfCases = `ls -l tinp | wc -l`
 @ numOfCases-- 
 set coursecounter = 0;
-while($coursecounter < $numOfCases)
+while($coursecounter <= $numOfCases)
    foreach line(cat ./tinp/$coursecounter.txt)
       ./student/$3/$line >> ./student/$3/tact/$coursecounter.txt
     #  if({ ../../bin/regex ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } == 0) then
