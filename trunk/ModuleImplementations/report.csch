@@ -1,0 +1,37 @@
+#!/bin/csh
+# argument 1 = course
+# argument 2 = assignment
+# argument 3 = student name
+# argument 4 = is detailed, 0=no, 1=yes 
+set course = $1
+set assignement  = $2
+set sName = $3
+set isDetailed = $4
+set errorCount = 0
+cd ../course/$1/student/$3
+make
+cd ../../
+set numOfCases = `ls -l tinp | wc -l`;
+@ numOfCases = $numOfCases--;
+set coursecounter = 0;
+while($coursecounter < $numOfCases)
+   foreach line(cat ./tinp/$coursecounter.txt)
+      ./$line >> ./student/$3/tact/$coursecounter.txt
+    #  if({ ../../bin/regex ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } == 0) then
+         
+     if({ diff ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } != 0) then
+         @ errorCount++
+         diff ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt >> ./student$3/errors.txt
+      endif
+      @ coursecounter++
+   end
+end
+cd ./student/$3
+echo "Number of test cases ran: $numOfCases" >> summary.txt
+echo "Number of errors encountered: $errorCount" >> summary.txt
+if($isDetailed) then
+   less errors.txt
+else
+   cat summary.txt
+endif
+            
