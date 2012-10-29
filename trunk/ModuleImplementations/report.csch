@@ -11,8 +11,8 @@ set errorCount = 0
 cd ../course/$1/student/$3
 make
 cd ../../
-set numOfCases = `ls -l tinp | wc -l`;
-@ numOfCases = $numOfCases--;
+set numOfCases = `ls -l tinp | wc -l`
+@ numOfCases-- 
 set coursecounter = 0;
 while($coursecounter < $numOfCases)
    foreach line(cat ./tinp/$coursecounter.txt)
@@ -21,7 +21,7 @@ while($coursecounter < $numOfCases)
          
      if({ diff -f ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } != 0) then
          @ errorCount++
-         diff ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt >> ./student$3/errors.txt
+         diff ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt >> ./student/$3/errors.txt
       endif
       @ coursecounter++
    end
