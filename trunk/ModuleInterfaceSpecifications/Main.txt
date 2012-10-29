@@ -12,7 +12,7 @@ eg.
 $ ./main <CR>
 
 
-At start up, This program will read config files from config/
+At start up, This program will read config files
 
    1) config/CourseConfig.txt
 
@@ -20,7 +20,7 @@ At start up, This program will read config files from config/
 
    3) config/StudentConfig.txt
 
-   4) PasswordConfig.txt
+   4) config/PasswordConfig.txt
 
 From these config files, main will set program variable, and create ALL
 directory's required by this program:
