@@ -8,7 +8,7 @@ set assignement  = $2
 set sName = $3
 set isDetailed = $4
 set errorCount = 0
-cd ../course/$1/student/$3
+cd ../course/$1/assignment/$2/student/$3
 make
 cd ../../
 set numOfCases = `ls -l tinp | wc -l`
