@@ -1,7 +1,8 @@
 CS2 Testbench MIS
+==================
+IMPORTANT:  All changes in current working directory.  Multiple commands should be separated by semicolons.  Successive line (after a new line character) will revert back to the current working directory of the parent process or system call, i.e. bin.
 
-
-Normal behavoir
+Normal behaviour
 -----------------------------------------------------------------------
 
 Interface:
@@ -12,20 +13,19 @@ Interface:
    - argument 2 = <ASSIGNMENTNAME>
    - argument 3 = <STUDENTNAME>
 
-Copy a makefile from courses/<COURSENAME>/<ASSIGNMENTNAME>makefile to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile
-then executes courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile
+Copy the makefile from courses/<COURSENAME>/<ASSIGNMENTNAME>/makefile to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile.
+Execute courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile to create the necessary executable file.
 
-Exeictes courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/<ASSIGNMENTNAME>
-   and diffs it with teacher provieded file in courses/<COURSENAME>/<ASSIGNMENTNAME>/texp/
+The output will be directed to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/tact/ using the same file name as the file in courses/<COURSENAME>/<ASSIGNMENTNAME>/tinp/.
+A diff will then be run to compare that output with the lecturer provided expected files in courses/<COURSENAME>/<ASSIGNMENTNAME>/texp/.
 
-Produces a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/errors.txt with output from diff
-Produces a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/summary.txt with total testcases and total failed.
+This will produce a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/errors.txt with the output from diff and
+a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/summary.txt containing the total number of test cases and the total number of test cases that failed.
 
 
 Assumptions
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
    No interactive testing is supported
-   all referanced files exsist and have proper format.
-
-   all makefiles will maintain absolute referances to all files.
+   All referenced files exist and have proper format.
+   All makefiles will maintain absolute referances to all files.
