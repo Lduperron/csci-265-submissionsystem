@@ -3,6 +3,13 @@ CS1 Testbench MIS
 
 Normal behaviour
 -----------------------------------------------------------------------
+
+Interface:
+This program will be called via the command line, and wil be provided with the following parameters:
+ - argument 1 = <COURSENAME>
+ - argument 2 = <ASSIGNMENTNAME>
+ - argument 3 = <STUDENTNAME>
+ 
 Copy a makefile from courses/<COURSENAME>/<ASSIGNMENTNAME>/makefile to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile.
 It then executes courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile to create the necessary executable file.
 
