@@ -1,0 +1,27 @@
+#!/bin/csh
+# argument 1 = course
+# argument 2 = assignment
+# argument 3 = student name
+# argument 4 = is detailed, 0=no, 1=yes
+set myHome = Mod
+set Courses = ../courses 
+set course = $1
+set assignement  = $2
+set sName = $3
+set isDetailed = $4
+if($isDetailed != 1) then
+   @ isDetailed = 0
+endif
+pwd
+rm -f $myHome/tmpreport.txt
+pwd
+(./$myHome/report_evaluate $1 $2 $3) >>& $myHome/tmpreport.txt
+
+pwd
+exit 1;
+if($isDetailed) then
+   less $courses/$1/$2/$3/errors.txt
+else
+   cat $courses/$1/$2/$3/summary.txt
+endif
+

@@ -1,0 +1,23 @@
+CS1 Testbench MIS
+
+
+Normal behavoir
+-----------------------------------------------------------------------
+Copy a makefile from courses/<COURSENAME>/<ASSIGNMENTNAME>makefile to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile
+then executes courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile
+
+Exeictes courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/<ASSIGNMENTNAME>
+ with command line argument specified in multiple files stoered in courses/<COURSENAME>/<ASSIGNMENTNAME>/tinp/
+   and diff's them with multiple teacher provieded files in courses/<COURSENAME>/<ASSIGNMENTNAME>/texp/
+
+Produces a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/errors.txt with output from diff
+Produces a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/summary.txt with total testcases and total failed.
+
+
+Assumptions
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+   No interactive testing is supported
+   all referanced files exsist and have proper format.
+
+   

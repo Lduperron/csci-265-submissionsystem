@@ -20,7 +20,6 @@ use IO::File;
 use File::Path 'make_path';
 use Mod::Passmod;
 
-#use Report;
 
 #constant options
 my $SERVSTA="SERVSTART";
@@ -250,7 +249,6 @@ sub Server
    	# if the server is running
 			print "Server started as process ";
 			system($showSvrPidCmd);
-			print "\n";
 		} else {
 			print "Server failed to start\n";
 		}
@@ -299,7 +297,6 @@ sub Server
 		# if the server is running
 			print "Submit Server [RUNNING] at process id ";
 			system($showSvrPidCmd);
-			print "\n";
 		} else {
 			print "Submit Server [STOPPED]\n";
 		}
@@ -438,16 +435,85 @@ sub Report
 {
    my $sName;
    my $report;
+   my $cReq; # course to preform the report on
+   my $aReq; # assignment to preform the report on
+   my $isDetailed; # 0 if no, 1 if yes
+
+   my $cValid = 0; # is the course valid? 0 if no, 1 if yes
+   my $aValid = 0; # is the assignment valid? 0 if no, 1 if yes
 
    $sName = shift;
 
    if($sName eq "simple"){
-      print "Simple Report requested\n";
-   }elsif($sName eq "details"){
-      print "Detailed Report requested\n";
+      $isDetailed = 0;
+   }else{
+      $isDetailed = 1;
+   }
+   print "Generate report for course:\n";
+   while($cReq=<>){
+      if(defined($cReq)){
+         last;
+      }else{
+      }
    }
 
+   print "Generate report for assignment:\n";
+   while($aReq=<>){
+      if(defined($aReq)){
+         last;
+      }else{
+      }
+   }
+
+   chomp($cReq);
+   chomp($aReq);
+   
+   open(my $courses, "<", $coursesConf)
+	or die("Unable to open file ". $coursesConf);
+
+# validate course and assignment
+   while (<$courses>) {
+	   my $course = $_;
+      chomp($course);
+	   if ($course eq $cReq){
+         $cValid=1;
+	   # read assignments file for current course
+	      open(my $assignments, "<", $assignmentsPath.$course.".txt")
+		      or die("Unable to open file ". $assignmentsPath.$course .".txt");
+
+	      while (<$assignments>) {
+		      my @assignment = split(':', $_);
+		      my $assignment = shift(@assignment);
+            chomp($assignment);
+		      if($assignment eq $aReq){
+               $aValid=1;
+            }
+	      }
+      }
+   }
+
+   if($cValid){
+      if($aValid){
+         # read students config file
+         open(my $students, "<", $studentsConf)
+	         or die("Unable to open file ". $studentsConf);
+
+         #for all students
+         while (<$students>) {
+	         my @student = split(':', $_);
+	         $sName = shift(@student);
+	         chomp($sName);
+            system("./Mod/report $cReq $aReq $sName $isDetailed");
+         }
+      }else{
+         print "The assignment is not valid\n";
+      }
+   }else{
+      print "The course is not valid\n";
+   }
 }
+
+
 
 sub printHelp
 {
@@ -455,7 +521,7 @@ sub printHelp
 	print "\033[0;0H"; 		#jump to 0,0
 
    print "__________________________________________________________________________\n\n";
-   print "           Submission System  -  Main Administrative Interface\n";
+   print "           Submission System  -  Main Administrative Client\n";
    print "__________________________________________________________________________\n";
    print "The following commands are recognized:\n\n";
    

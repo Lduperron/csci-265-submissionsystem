@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 
-$| = 1;
-
-while(<>){
-   print;
+while(1){
+   sleep(5);
 }
