@@ -1,14 +1,16 @@
 CS1 Testbench MIS
-
+==================
+IMPORTANT:  All changes in current working directory.  Multiple commands should be separated by semicolons.  Successive line (after a new line character) will revert back to the current working directory of the parent process or system call, i.e. bin.
 
 Normal behaviour
 -----------------------------------------------------------------------
 
 Interface:
-This program will be called via the command line, and wil be provided with the following parameters:
- - argument 1 = <COURSENAME>
- - argument 2 = <ASSIGNMENTNAME>
- - argument 3 = <STUDENTNAME>
+
+   This program will be called via the command line, and wil be provided with the following parameters:
+   - argument 1 = <COURSENAME>
+   - argument 2 = <ASSIGNMENTNAME>
+   - argument 3 = <STUDENTNAME>
  
 Copy a makefile from courses/<COURSENAME>/<ASSIGNMENTNAME>/makefile to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile.
 It then executes courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile to create the necessary executable file.
@@ -27,5 +29,5 @@ Assumptions
 -----------------------------------------------------------------------
    No interactive testing is supported.
    All referenced files exist and have proper format.
-   all makefiles will maintain absolute references to all files.
+   All makefiles will maintain absolute references to all files.
    
