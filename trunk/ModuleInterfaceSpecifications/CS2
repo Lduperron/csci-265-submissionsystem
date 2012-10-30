@@ -1,0 +1,31 @@
+CS2 Testbench MIS
+
+
+Normal behavoir
+-----------------------------------------------------------------------
+
+Interface:
+
+   This program will be called via the command line, and will be provided the following prarameters:
+
+   - argument 1 = <COURSENAME>
+   - argument 2 = <ASSIGNMENTNAME>
+   - argument 3 = <STUDENTNAME>
+
+Copy a makefile from courses/<COURSENAME>/<ASSIGNMENTNAME>makefile to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile
+then executes courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile
+
+Exeictes courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/<ASSIGNMENTNAME>
+   and diffs it with teacher provieded file in courses/<COURSENAME>/<ASSIGNMENTNAME>/texp/
+
+Produces a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/errors.txt with output from diff
+Produces a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/summary.txt with total testcases and total failed.
+
+
+Assumptions
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+   No interactive testing is supported
+   all referanced files exsist and have proper format.
+
+   all makefiles will maintain absolute referances to all files.

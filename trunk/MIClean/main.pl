@@ -442,6 +442,8 @@ sub Report
    my $cValid = 0; # is the course valid? 0 if no, 1 if yes
    my $aValid = 0; # is the assignment valid? 0 if no, 1 if yes
 
+   my $testType = 1; # one or two for cs1 and cs2 style testeings.
+
    $sName = shift;
 
    if($sName eq "simple"){
@@ -486,6 +488,7 @@ sub Report
 		      my $assignment = shift(@assignment);
             chomp($assignment);
 		      if($assignment eq $aReq){
+               $testType = pop(@assingment);
                $aValid=1;
             }
 	      }
@@ -503,7 +506,9 @@ sub Report
 	         my @student = split(':', $_);
 	         $sName = shift(@student);
 	         chomp($sName);
+# if cs1, call reportCS1, else reportCS2....
             system("./Mod/report $cReq $aReq $sName $isDetailed");
+            print "A report has been generated for each student.\n";
          }
       }else{
          print "The assignment is not valid\n";
