@@ -3,6 +3,10 @@
 set test_count = 0;
 set error_count = 0;
 
+perl stub.pl &;
+set pidofstub;
+$pidofstub = `pgrep stub` ;
+echo $pidofstub;
 foreach F (tinp/*) 
     @ test_count++
     set T = ${F:t}      
@@ -16,5 +20,10 @@ foreach F (tinp/*)
     endif 
 end
 
+kill -9 $pidofstub;
+
+echo "pgrep stub";
+pgrep stub
+echo " ";
 echo UserClient Test Set 1 Results:
 echo $test_count tests were performed with $error_count errors found.
