@@ -138,6 +138,11 @@ BEGIN  # Finds the position of the module.
    
       tie @temparray, 'Tie::File', $StudentsPath."$name"."passwordSheet.txt" or die;
       
+	  if(!defined($temparray[0]))
+	  {
+		return 0; # No passwords left =<
+	  }
+	  
       $realpass = $temparray[0];
       
       if($realpass eq $givenpass)
