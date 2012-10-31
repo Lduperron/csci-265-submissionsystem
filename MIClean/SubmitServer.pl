@@ -141,8 +141,8 @@ sub validAsgm # assignment path, assignment name
    my $course = shift;
    
 	# read assignments file for current course
-	open(my $assignments, "<", $assignmentsPath.$course. $asgm.".txt")
-		or die("Unable to open file ". $assignmentsPath.$course. $asgm.".txt");
+	open(my $assignments, "<", $assignmentsPath.$course. $asgm)
+		or die("Unable to open file ". $assignmentsPath.$course. $asgm);
 
 	# create assignments, tinp, and texp directories
 	while (<$assignments>) {
