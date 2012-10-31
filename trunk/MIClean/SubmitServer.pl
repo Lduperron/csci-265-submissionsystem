@@ -19,7 +19,7 @@ my $sock = new IO::Socket::INET (
                               );
 die "Error: Unable to create socket: $!\n" unless $sock;
 
-my $root = "../";
+my $root = "../../";
 my $studentPath = $root . "config/StudentConfig.txt";
 my $coursesConf =$root . "config/CourseConfig.txt";
 my $coursesPath = $root . "config/courses/";
@@ -75,7 +75,7 @@ while(my $new_sock = $sock->accept()) {
                # with user file already in assignment dir
                unless(open ($submsn, '<', '>'.$assignmentsPath . $course . "/" . $asgm[0] . "/" . $user. "/" . $fileName)) {
 	               die "\nUnable to create $fileName\n";
-               };
+               }
                my $j = 0;
                while ($line = <$new_sock>) {
                   printf $submsn $line;
@@ -130,8 +130,8 @@ sub validAsgm # assignment path, assignment name
    my $course = shift;
    
 	# read assignments file for current course
-	open(my $assignments, "<", $assignmentsPath.$course.".txt")
-		or die("Unable to open file ". $assignmentsPath.$course .".txt");
+	open(my $assignments, "<", $assignmentsPath.$course. $asgm.".txt")
+		or die("Unable to open file ". $assignmentsPath.$course. $asgm.".txt");
 
 	# create assignments, tinp, and texp directories
 	while (<$assignments>) {
