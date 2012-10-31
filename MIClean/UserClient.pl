@@ -14,8 +14,6 @@ $sock = new IO::Socket::INET (
                              );
 die "Error: Unable to connect to the submission server.\n" unless $sock; 
 
-#Assume proper use??
-
 if (scalar(@ARGV) == 0) {
     print "Error: No username, password, class name, or file name submitted.\n"; 
     exit(0);
@@ -54,7 +52,7 @@ for ($i = 3; <DATA>; $i++) {
 
 close DATA;
 
-$sizeArr = scalar(@tmpArr) - 2;
+$sizeArr = scalar(@tmpArr) - 3;
 
 $tmpArr[2] = $sizeArr;
 
@@ -64,7 +62,7 @@ for ($i = 0; $i < scalar(@tmpArr); $i++) {
 
 $valid = <$sock>;
 
-while (defined($valid)) {       
+if (defined($valid)) {       
     if ($valid eq "0") { 
         print "Error: Username/password is not valid.\n";
         exit(0);
@@ -84,5 +82,6 @@ while (defined($valid)) {
         print "File submit successful.\n";
         exit(1);
     }
-    $valid = <$sock>;
 }
+
+exit(0); #If the function gets here it must have failed
