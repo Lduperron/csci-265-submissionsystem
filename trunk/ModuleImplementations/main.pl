@@ -107,16 +107,16 @@ my $passNumber;
 
 # create student directories under students and under assignments
    while (<$students>) {
-	   my @student = split(':', $_);
-	   my $student = shift(@student);
-	   chomp($student);
-	   make_path($studentsPath.$student, $mpOptions);
+      my @student = split(':', $_);
+      my $student = shift(@student);
+      chomp($student);
+      make_path($studentsPath.$student, $mpOptions);
 
-	# process enrolled courses and create relevant student directories	
-	   while (my $course = shift(@student)) {
-		   chomp($course);
-		# read assignments file of current course
-		   open(my $assignments, $assignmentsPath.$course.".txt")
+   # process enrolled courses and create relevant student directories	
+      while (my $course = shift(@student)) {
+   	   chomp($course);
+   	# read assignments file of current course
+         open(my $assignments, $assignmentsPath.$course.".txt")
 			   or die("Unable to open file ". $assignmentsPath.$course.".txt");
 
 		# create student and tact directories under assignments
