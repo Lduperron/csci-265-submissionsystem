@@ -176,11 +176,7 @@ my $passNumber;
       }elsif($input eq $PASSGEN){
          print "Generate new passwords for student:\n";
          while(<>){
-            if(&Pass($_) == 0){
-               # it failed, bad input, loop again
-            }else{
-               last;
-            }
+            &Pass($_);
          }
       }elsif($input eq $CPASSALL){
          print "All passwords will be cleard for all students\n";
@@ -188,11 +184,7 @@ my $passNumber;
       }elsif($input eq $CPASS){
          print "Clear all passwords for student:\n";
          while(<>){
-            if(&clearPass($_) == 0){
-# bad input, clearPass failed
-            }else{
-               last;
-            }
+            &clearPass($_);
          }
       }elsif($input eq $REPS){
          &Report("simple");

@@ -59,6 +59,8 @@ $tmpArr[2] = $sizeArr;
 for ($i = 0; $i < scalar(@tmpArr); $i++) {
     print $sock "$tmpArr[$i]\n";
 }
+# server need's this to know when to stop receiving the file!!!
+print $sock "^D";
 
 $valid = <$sock>;
 
