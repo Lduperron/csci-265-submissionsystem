@@ -1,12 +1,103 @@
-MG for User Client Interface (DRAFT)
+MIS
+_______________________________________________________________________________
+UserClient.pl
+_______________________________________________________________________________
+Normal Behaviour
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+This program will accept command line arguments.  This is the only way in which
+to input data into this program.  These command line arguments, of which there 
+must be 4, must be provided in the following order: 
+    1) User name
 
-This program, like all basic PERL programs, will be accessed by the user through a Terminal window using the perl progname.pl command.
+    2) Password
 
-This program, hereto forth identified as this program, will accept as command line arguments the user name, their password, the name of the class enrolled in, and the file the user wishes to submit in this order. 
+    3) Name of class to submit project to
 
-Upon receiving a user name, course name, and password this program will pass these values to the server to be checked for validity.  If these provided items prove to be invalid the server will pass back an appropriate response allowing this program to prompt the user that one of said parameters was invalid after which the program will exit.
+    4) Filename
 
-If these three parameters are valid the program will then pass the file to server to be submitted.  If the server submit is unsuccessful, the server will pass back an appropriate response allowing this program to display an error message and quit.
+These command line arguments are taken into the program using the @ARGV array.
+The following conditional statements are then evaluated:
+    If (scalar(@ARGV) == 0)
+        Error: No username, password, class name, or file name submitted.\n is 
+        printed to STDOUT and the program exits with a value of 0 since no file
+        was submitted
+    Elsif (scalar(@ARGV) == 1)
+        Error: No password, class name, or file name submitted.\n is printed to 
+        STDOUT and the program exits with a value of 0 since no file was submitted
+    Elsif (scalar(@ARGV) == 2)
+        Error: No class name or file name submitted.\n is printed to STDOUT and 
+        the program exits with a value of 0 since no file was submitted
+    Elsif (scalar(@ARGV) == 3)
+        Error: No file name submitted.\n is printed to STDOUT and the program 
+        exits with a value of 0 since no file was submitted
+    Elsif (scalar(@ARGV) >= 5)
+        Error: Too many input parameters.\n is printed to STDOUT and the program
+        exits with  value of 0 since no file was submitted
 
-If the server submit is successful, the server will return an appropriate response allowing this program to display a message saying the file submission was successful and quit.
+If the above conditions are passed the program then executes the following 
+steps:
+    -sets the scalar variable $tline to $ARGV[0], $ARGV[1], and $ARGV[2] 
+    joined together with a colon between each of the two mentioned values
+    -splits $ARGV[3] at every / and places the result in the array @tmpFile
+    -places the last entry of @tmpFile into $fname.  
+    -$tline and $fname, in that order, into the array @tmpArr
+    -opens the file in $ARGV[3] with filehandle DATA
+        -if not successful, Can't open $ARGV[3] $!\n is output with $! 
+        appropriately evaluated and the program is exited with a value of 0
+        since no file was submitted
+    -set $tmpArr[2] = '0' as a placeholder
+    -while <DATA>, put the contents of <DATA>, held in $_ PERL variable,
+    into the array @tmpArr starting at array position 3, 4, etc. until !<DATA>
+    -set $sizeArr = scalar(@tmpArr) - 3 with -3 representing the 3 array items
+    in @tmpArr that are not a part of the file named by $ARGV[3]
+    -set $tmpArr[2] = $sizeArr
+    -while the iterator $i, initialized to 0, is less than scalar(@tmpArr)
+    print $tmpArr[$1]\n to the socket $sock
+    -get the value returned as a result of the evaluation done by the server by
+    setting $valid = <$sock>
+    -If defined($valid) evaluate the following conditions
+        If ($valid eq "0")
+            Error: Username/password is not valid.\n is output to STDOUT and the 
+            program exits with a value of 0 since no file was submitted
+        Elsif ($valid eq "1")
+            Error: Class name is not valid.\n is output to STDOUT and the 
+            program exits with a value of 0 since no file was submitted
+        Elsif ($valid eq "2")
+            Error: Filename is not valid.\n is output to STDOUT and the program
+            exits with a value of 0 since no file was submitted
+        Elsif ($valid eq "3")
+            Error: Assignment is late.\n is output to STDOUT and the program
+            exits with a value of 0 since no file was submitted
+        Elsif ($valid eq "4")
+            File submit failed.\n is output to STDOUT and the program exits with
+            a value of 0 since no file was submitted
+        Elsif ($valid eq "5")
+            File submit successful.\n is output to STDOUT and the program exits
+            with a value of 1 since a file was successfully submitted
+    -If the program reaches this point either no response was received from the
+    server or the response was invalid.  If this is the case, exit with a value 
+    of 0 since no file was submitted 
 
+Exceptions
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Unable to connect to server.
+
+File provided is unable to be opened.
+
+Assumptions
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Somewhere a server with appropriate programming is waiting for UserClient to
+connect to it (i.e. a server with modules capable of handling the information
+passed to the if by UserClient)
+
+The server will pass back information which can be interpreted by UserClient
+(e.g. the server will pass back one of "1", "2", "3", "4", "5")
+
+The file being submitted to UserClient exists and can be opened
+
+The user is able to enter input into the command line
+
+The user has a version of PERL installed on their computer capable of running
+the program
+      
