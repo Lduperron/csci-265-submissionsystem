@@ -1,6 +1,8 @@
  # In Perl there is no special 'class' definition.  A namespace is a class.
   package Passmod;
 
+  my $moduledirectory;
+
 BEGIN  # Finds the position of the module.
 {      # Assumes that Session-Token-0.82 is in the same folder.
    use File::Basename;
@@ -17,7 +19,7 @@ BEGIN  # Finds the position of the module.
    }
 }
 
-
+  
   use lib "$moduledirectory";
   use lib "$moduledirectory/Session-Token-0.82/lib";
   use lib "$moduledirectory/Session-Token-0.82/blib/arch";
@@ -29,7 +31,8 @@ BEGIN  # Finds the position of the module.
   use constant PATH => "../students/";
   use Tie::File;
   
- 
+  my $StudentsPath = $moduledirectory."/../../students/";
+   
   our $VERSION = "1.00";
 
   sub new
@@ -45,22 +48,22 @@ BEGIN  # Finds the position of the module.
       
       $self->reinitializeGenerator();
      
-      if(!-d PATH)  # Makes sure the directory of where our passwords are going to be is valid
+      if(!-d $StudentsPath)  # Makes sure the directory of where our passwords are going to be is valid
       { 
          return 0;
-         #system("mkdir ".PATH);
+         #system("mkdir ".$StudentsPath);
       }
       else
       {
-         system("touch ".PATH."testfile");
+         system("touch ".$StudentsPath."testfile");
          
-         if(!-e PATH."testfile")
+         if(!-e $StudentsPath."testfile")
          {
             die("No write access to students folder!");
          }
          else
          {
-            system("rm -f ".PATH."testfile");
+            system("rm -f ".$StudentsPath."testfile");
          }
       }
 
@@ -79,13 +82,13 @@ BEGIN  # Finds the position of the module.
     {
         $target = shift;
         
-      if(!-d PATH)  # Makes sure the directory of where our passwords are going to be is valid
+      if(!-d $StudentsPath)  # Makes sure the directory of where our passwords are going to be is valid
       { 
          return 0;
-         #system("mkdir ".PATH.$target);
+         #system("mkdir ".$StudentsPath.$target);
       }
       
-      open($passfile , ">".PATH."$target"."passwordSheet.txt");
+      open($passfile , ">".$StudentsPath."$target"."passwordSheet.txt");
       
       for(my $i = 0; $i < $self->{number}; $i++)
       {
@@ -96,13 +99,13 @@ BEGIN  # Finds the position of the module.
       
       if($self->{carboncopy})
       {
-         if(!-d PATH."Passwords/")  # Makes sure the directory of where our passwords are going to be is valid
+         if(!-d $StudentsPath."Passwords/")  # Makes sure the directory of where our passwords are going to be is valid
          { 
-            system("mkdir ".PATH."Passwords/");
+            system("mkdir ".$StudentsPath."Passwords/");
          }
          
-         my $originalpath = PATH."$target"."passwordSheet.txt";
-         my $copypath = PATH."Passwords/$target"."passwordSheet.txt";
+         my $originalpath = $StudentsPath."$target"."passwordSheet.txt";
+         my $copypath = $StudentsPath."Passwords/$target"."passwordSheet.txt";
          system("cp $originalpath $copypath");
          
       }
@@ -130,10 +133,10 @@ BEGIN  # Finds the position of the module.
    my $realpass;
    my @temparray;
    
-   if(-e PATH."$name"."passwordSheet.txt")
+   if(-e $StudentsPath."$name"."passwordSheet.txt")
    {
    
-      tie @temparray, 'Tie::File', PATH."$name"."passwordSheet.txt" or die;
+      tie @temparray, 'Tie::File', $StudentsPath."$name"."passwordSheet.txt" or die;
       
       $realpass = $temparray[0];
       
