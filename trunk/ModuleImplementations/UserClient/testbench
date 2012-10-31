@@ -16,4 +16,5 @@ foreach F (tinp/*)
     endif 
 end
 
+echo UserClient Test Set 1 Results:
 echo $test_count tests were performed with $error_count errors found.

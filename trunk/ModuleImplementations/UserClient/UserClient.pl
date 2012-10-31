@@ -12,12 +12,12 @@ $sock = new IO::Socket::INET (
                               PeerPort => '7071', 
                               Proto => 'tcp'
                              );
-die "Error: Unable to connect to the submission server.\n" unless $sock;
+die "Error: Unable to connect to the submission server.\n" unless $sock; 
 
 #Assume proper use??
 
 if (scalar(@ARGV) == 0) {
-    print "Error: No username, password, class name, or file name submitted.\n";
+    print "Error: No username, password, class name, or file name submitted.\n"; 
     exit(0);
 } elsif (scalar(@ARGV) == 1) {
     print "Error: No password, class name, or file name submitted.\n";
@@ -35,17 +35,25 @@ if (scalar(@ARGV) == 0) {
 
 $tline = join(":", $ARGV[0], $ARGV[1], $ARGV[2]);
 
-@tmpFile = split('/', $ARGV[3]); #Need to split or just nav to directory?
+@tmpFile = split('/', $ARGV[3]); 
 
 $fname = $tmpFile[(scalar(@tmpFile)-1)]; 
 
 @tmpArr = ($tline, $fname);
 
-open(DATA, $ARGV[3]) or die $!;
+open(DATA, $ARGV[3]) or die "Can't open $ARGV[3] $!";
 
-for ($i = 2; <DATA>; $i++) {
+$tmpArr[2] = '0';
+
+for ($i = 3; <DATA>; $i++) {
     $tmpArr[$i] = $_; 
 }  
+
+close DATA;
+
+$sizeArr = scalar(@tmpArr) - 2;
+
+$tmpArr[2] = $sizeArr;
 
 for ($i = 0; $i < scalar(@tmpArr); $i++) {
     print $sock "$tmpArr[$i]\n";
@@ -54,17 +62,17 @@ for ($i = 0; $i < scalar(@tmpArr); $i++) {
 $valid = <$sock>;
 
 while (defined($valid)) {       
-    if ($valid eq "0") {
-        print "Error: Username is not valid.\n";
+    if ($valid eq "0") { 
+        print "Error: Username/password is not valid.\n";
         exit(0);
     } elsif ($valid eq "1") { 
-        print "Error: Password is not valid.\n";
-        exit(0);
-    } elsif ($valid eq "2") {
         print "Error: Class name is not valid.\n";
         exit(0);
-    } elsif ($valid eq "3") {
+    } elsif ($valid eq "2") {
         print "Error: Filename is not valid.\n";
+        exit(0);
+    } elsif ($valid eq "3") {
+        print "Error: Assignment is late.\n";
         exit(0);
     } elsif ($valid eq "4") {
         print "File submit failed.\n";
@@ -75,5 +83,3 @@ while (defined($valid)) {
     }
     $valid = <$sock>;
 }
-
-close DATA;
