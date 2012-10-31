@@ -79,10 +79,10 @@ while (defined($valid)) {
         exit(0);
     } elsif ($valid eq "4") {
         print "File submit failed.\n";
-        exit(1);
+        exit(0);
     } elsif ($valid eq "5") {
         print "File submit successful.\n";
-        exit(0);
+        exit(1);
     }
     $valid = <$sock>;
 }
