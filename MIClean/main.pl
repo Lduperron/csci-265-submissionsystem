@@ -488,7 +488,7 @@ sub Report
 		      my $assignment = shift(@assignment);
             chomp($assignment);
 		      if($assignment eq $aReq){
-               $testType = pop(@assingment);
+               $testType = pop(@assignment);
                $aValid=1;
             }
 	      }
