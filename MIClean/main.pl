@@ -16,6 +16,9 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin"; # Adds the module folder into the libary string so that it can find PasswordGen (in case we're running the script from a different directory
 
+# changes the cwd to where the file is ACTUALLY located
+chdir $FindBin::Bin;
+
 use IO::File;
 use File::Path 'make_path';
 use Mod::Passmod;
@@ -45,6 +48,9 @@ my $passLength;
 my $passType;
 my $passNumber;
 
+
+
+
 #---------------------------------------------------------------------
 #        Startup Dir Stuct Managment
 #---------------------------------------------------------------------
@@ -59,7 +65,7 @@ my $passNumber;
 #----------------------------------------------------------------------
 
 # Define default paths
-   my $root = "../";
+   my $root = $FindBin::Bin . "/../";
    my $configPath = $root . "config/";
    my $coursesPath = $root . "courses/";
    my $assignmentsPath = $configPath . "courses/";
@@ -216,7 +222,7 @@ sub Server
 # Define Submit Server defaults
 	my $submitSvrName = "SubmitServer";
 	my $svrPidFileName = "SubmitServer.pid";
-	my $startSvrCmd = "./Mod/$submitSvrName &";
+	my $startSvrCmd = $root . "bin/Mod/$submitSvrName &";
 	my $getPidCmd = "pgrep " . $submitSvrName . " > ";
 	my $showSvrPidCmd = "cat ". $svrPidFileName;
 
@@ -506,8 +512,8 @@ sub Report
 	         my @student = split(':', $_);
 	         $sName = shift(@student);
 	         chomp($sName);
-# if cs1, call reportCS1, else reportCS2....
-            system("./Mod/report $cReq $aReq $sName $isDetailed");
+
+            system("$root/bin/Mod/report $cReq $aReq $sName $isDetailed");
             print "A report has been generated for each student.\n";
          }
       }else{
