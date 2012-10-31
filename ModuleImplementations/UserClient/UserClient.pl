@@ -41,7 +41,10 @@ $fname = $tmpFile[(scalar(@tmpFile)-1)];
 
 @tmpArr = ($tline, $fname);
 
-open(DATA, $ARGV[3]) or die "Can't open $ARGV[3] $!";
+if (!open(DATA, $ARGV[3])) {
+    print "Can't open $ARGV[3] $!\n";
+    exit(0);
+}
 
 $tmpArr[2] = '0';
 
