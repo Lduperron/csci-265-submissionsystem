@@ -2,6 +2,8 @@
 
 $| = 1;
 
+$SIG{'PIPE'} = 'IGNORE';
+
 use IO::File;
 use IO::Socket;
 
@@ -84,6 +86,9 @@ while(my $new_sock = $sock->accept()) {
                }
                my $j = 0;
                while ($line = <$new_sock>) {
+                  if($line=="^D"){
+                     last;
+                  }
                   printf $submsn $line;
                   $j++;
                }
