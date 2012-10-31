@@ -19,7 +19,7 @@ my $sock = new IO::Socket::INET (
                               );
 die "Error: Unable to create socket: $!\n" unless $sock;
 
-my $root = "../../";
+my $root = "../";
 my $studentPath = $root . "config/StudentConfig.txt";
 my $coursesConf =$root . "config/CourseConfig.txt";
 my $coursesPath = $root . "config/courses/";
@@ -30,6 +30,7 @@ my $user;
 my $password;
 my $fileName;
 my @asgm;
+my $submsn;
 while(my $new_sock = $sock->accept()) {     
     for (my $i = 0; $i < 4; $i++) {        
         my $line = <$new_sock>;        
@@ -72,10 +73,12 @@ while(my $new_sock = $sock->accept()) {
                #length is expected # of lines for submission file
                #make txt file in correct directory & store socket file in it
                # with user file already in assignment dir
-               open(my $submsn, '<', $assignmentsPath . $course . "/" . $asgm[0] . "/" . $user. "/" . $fileName);
+               unless(open ($submsn, '<', '>'.$assignmentsPath . $course . "/" . $asgm[0] . "/" . $user. "/" . $fileName)) {
+	               die "\nUnable to create $fileName\n";
+               };
                my $j = 0;
                while ($line = <$new_sock>) {
-                  print $submsn $line;
+                  printf $submsn $line;
                   $j++;
                }
                if ($j != $length){
