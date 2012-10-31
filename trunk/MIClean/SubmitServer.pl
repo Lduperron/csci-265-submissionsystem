@@ -4,8 +4,14 @@ $| = 1;
 
 use IO::File;
 use IO::Socket;
+
+# removes the old location of FindBin
 use FindBin;
+
+# finds the location of the ACTUALL SumbitServer.pl
+# using FindBin to keep on top of dir struct 
 use lib "$FindBin::Bin";
+
 use Passmod;
 use strict;
 use warnings;
@@ -19,7 +25,7 @@ my $sock = new IO::Socket::INET (
                               );
 die "Error: Unable to create socket: $!\n" unless $sock;
 
-my $root = "../../";
+my $root = "$FindBin::Bin"."/../../";
 my $studentPath = $root . "config/StudentConfig.txt";
 my $coursesConf =$root . "config/CourseConfig.txt";
 my $coursesPath = $root . "config/courses/";
