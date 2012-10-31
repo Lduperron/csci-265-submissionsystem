@@ -155,7 +155,12 @@ my $passNumber;
 #           MAIN Program for userInput
 #-------------------------------------------------------------------
 
-#do {
+   my $pass = Passmod->new();
+   $pass->setSetting("length",$passLength);
+   $pass->setSetting("type",$passType);
+   $pass->setSetting("number",$passNumber);
+   $pass->setSetting("carboncopy",0);
+
    my $input = "";
    &printHelp();
    print ":";
@@ -172,19 +177,21 @@ my $passNumber;
          &Server("stat");
       }elsif($input eq $PASSGENALL){
          print "New passwords will be generated for all students\n";
-         &Pass("all");
+         &Pass($pass,"all");
       }elsif($input eq $PASSGEN){
          print "Generate new passwords for student:\n";
          while(<>){
-            &Pass($_);
+            &Pass($pass,$_);
+            last;
          }
       }elsif($input eq $CPASSALL){
          print "All passwords will be cleard for all students\n";
-         &clearPass("all");
+         &clearPass($pass,"all");
       }elsif($input eq $CPASS){
          print "Clear all passwords for student:\n";
          while(<>){
-            &clearPass($_);
+            &clearPass($pass,$_);
+            last;
          }
       }elsif($input eq $REPS){
          &Report("simple");
@@ -198,12 +205,14 @@ my $passNumber;
          last;
       }elsif($input eq $EXIT){
          last;
+      }elsif($input eq ""){
       }else{
          print "Invalid Command, Enter $HELP for help\n";
       }
       print ":";
    }
-#}
+
+
 #------Helper Methods--------------------------------------------------
 #----------------------------------------------------------------------
 #		Server
@@ -341,16 +350,14 @@ sub getSvrStatus {
  
 sub Pass
 {
+   my $pass = shift;
+
    my $sName;
    $sName = shift;
 
    chomp($sName);
 
-   my $pass = Passmod->new();
-   $pass->setSetting("length",$passLength);
-   $pass->setSetting("type",$passType);
    $pass->setSetting("number",$passNumber);
-   $pass->setSetting("carboncopy",0);
 
    open(my $students, "<", $studentsConf)
 	   or die("Unable to open file ". $studentsConf);
@@ -385,16 +392,14 @@ sub Pass
 
 sub clearPass
 {
+   my $pass = shift;
+
    my $sName;
    $sName = shift;
 
    chomp($sName);
 
-   my $pass = Passmod->new();
-   $pass->setSetting("length",$passLength);
-   $pass->setSetting("type",$passType);
    $pass->setSetting("number",0);
-   $pass->setSetting("carboncopy",0);
 
    open(my $students, "<", $studentsConf)
 	   or die("Unable to open file ". $studentsConf);
