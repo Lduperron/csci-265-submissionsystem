@@ -28,6 +28,7 @@ my $sock = new IO::Socket::INET (
 die "Error: Unable to create socket: $!\n" unless $sock;
 
 my $root = "$FindBin::Bin"."/../../";
+my $configPath = $root . "config/";
 my $studentPath = $root . "config/StudentConfig.txt";
 my $coursesConf =$root . "config/CourseConfig.txt";
 my $coursesPath = $root . "config/courses/";
@@ -56,7 +57,7 @@ while(my $new_sock = $sock->accept()) {
                     close($new_sock);
                     last; #break out of for loop
                 } elsif (!isEnrolled($studentPath, $user, $course)) {
-                    print $new_sock "1\n";    #user isn"t in that course
+                    print $new_sock "1\n";    #user isn't in that course
                     close($new_sock);
                     last;
                 }
@@ -64,17 +65,20 @@ while(my $new_sock = $sock->accept()) {
             } elsif ($i == 1 ) {
                 chomp $line;    # name of assignment
                 $fileName = $line;
-                @asgm = split (".");
-                if (!validAsgm ($asgm[0], $course)) {
-                    print $new_sock "2\n"; #assignment doesn"t exist
+                print "$fileName\n";
+               
+                #(my $asgmName, my $asgmType)  = split('.', $fileName);
+                #print "$asgmName - $asgmType \n";
+                if (!validAsgm ($fileName, $course)) {
+                    print $new_sock "2\n"; #assignment doesn't exist
                     close($new_sock);
                     last;
                 }
                     #asgm.txt stored in asgm directory
                 my @serverTime = split(" ", localtime);
                 my $subDate = dateTime( $serverTime[4] , $serverTime[1] , $serverTime[2]);
-   
-                if (!onTime( $subDate, $line, $course)) {
+                print "1st $subDate\n";
+                if (!onTime( $subDate, $fileName, $course)) {
                     print $new_sock "3\n";
                     close($new_sock);
                     last;
@@ -144,18 +148,19 @@ sub validAsgm # assignment path, assignment name
 {
    my $asgm = shift;
    my $course = shift;
-   
+   print "$asgm\n";
 	# read assignments file for current course
-	open(my $assignments, "<", $assignmentsPath.$course. "/".$asgm)
-		or die("Unable to open file ". $assignmentsPath.$course. $asgm);
+	open(my $assignments, "<", $coursesPath.$course. ".txt")
+		or die("Unable to open file ". $coursesPath.$course. ".txt");
 
 	# create assignments, tinp, and texp directories
 	while (<$assignments>) {
       my @assignment = split(":", $_);
       my $assignment = shift(@assignment);
-      if ($assignment eq $asgm) {
+      if ( ($assignment . ".txt") eq $asgm) {
          return 1;
       }
+      print "$assignment\n";
 	}
 	return 0;
 
@@ -169,18 +174,21 @@ sub onTime # checks if file is on time
    my $asgm = shift;
    my $course = shift;
    
+   print "2nd $subDate\n";
+   
    my $onTime = 0;
    
    # read assignments file for current course
-	open(my $assignments, "<", $assignmentsPath.$course.".txt")
-		or die("Unable to open file ". $assignmentsPath.$course .".txt");
+	open(my $assignments, "<", $coursesPath.$course.".txt")
+		or die("Unable to open file ". $coursesPath.$course .".txt");
 
 	# create assignments, tinp, and texp directories
 	while (<$assignments>) {
       my @assignment = split(":", $_);
       my $assignment = shift(@assignment);
       my $asgmDueDate = shift(@assignment);
-      if ($assignment eq $asgm) {
+      print "Due: $asgmDueDate\n";
+      if (($assignment . ".txt") eq $asgm) {
          if ($subDate <= $asgmDueDate) {
             return 1;
          }else{
