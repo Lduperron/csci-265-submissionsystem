@@ -15,7 +15,7 @@ $sock = new IO::Socket::INET (
 die "Error: Unable to create socket: $!\n" unless $sock;
 
 while($new_sock = $sock->accept()) {     
-    print $new_sock '3\n';
+    print $new_sock "3\n";
     close($new_sock);
 }   
 close($sock);
