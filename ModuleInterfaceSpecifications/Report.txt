@@ -55,3 +55,5 @@ and is populated (test - expected result)
 - tact exists (test - actual result)
 - the program has read, write, and execute permissions with the bin (where this 
 program is ran) directory, and assignment + student directories under assignment
+- tinp is formatted in such a way that it will be ./program -flags where ./program is
+binary produced by the makefile
