@@ -75,7 +75,7 @@ if($valid == "400")
           print $sock "$tmpArr[$i]\n";
       }
       # server need's this to know when to stop receiving the file!!!
-      print $sock "^D";
+      print $sock "^D\n";
       $valid = <$sock>;
       
    }
@@ -90,7 +90,7 @@ if (defined($valid)) {
     } elsif ($valid eq "1") { 
         print "Error: Class name is not valid.\n";
 
-    } elsif ($valid eq "2") {
+    } elsif ($valid eq "2\n") {
         print "Error: Filename is not valid.\n";
 
     } elsif ($valid eq "3") {
