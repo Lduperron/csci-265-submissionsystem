@@ -42,7 +42,8 @@ my $submsn;
 while(my $new_sock = $sock->accept()) {     
     for (my $i = 0; $i < 4; $i++) {        
         my $line = <$new_sock>;        
-        if(defined($line)) {            
+        if(defined($line)) {
+            print "defined line\n";            
             if ($i == 0) {
                 chomp $line;     
                 ($user, $password, $course) = split(":", $line);
