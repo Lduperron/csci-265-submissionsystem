@@ -9,12 +9,12 @@ use warnings;
 
 $sock = new IO::Socket::INET (
                               PeerAddr => 'localhost',
-                              PeerPort => '9001', 
+                              PeerPort => '8585', 
                               Proto => 'tcp'
                              );
 if (!$sock) {
-	print "Error: Unable to connect to the submission server.\n";
-	exit(0);
+        print "Error: Unable to connect to the submission server.\n";
+        exit(0);
 }
 
 if (scalar(@ARGV) == 0) {
@@ -41,7 +41,7 @@ $tline = join(":", $ARGV[0], $ARGV[1], $ARGV[2]);
 $fname = $tmpFile[(scalar(@tmpFile)-1)];
 
 @tmpArr = ($tline, $fname);
-# possiohblr issue????
+
 if (!open(DATA, $ARGV[3])) {
     print "Can't open $ARGV[3] $!\n";  #hard enough??
     exit(0);
@@ -50,36 +50,40 @@ if (!open(DATA, $ARGV[3])) {
 $tmpArr[2] = '0';
 
 for ($i = 3; <DATA>; $i++) {
-    $tmpArr[$i] = $_; 
+
+     $tmpArr[$i] = $_;
+
 }  
 
 close DATA;
 
 $sizeArr = scalar(@tmpArr) - 3;
 
-$tmpArr[2] = $sizeArr;
+$tmpArr[2] = $sizeArr."\n";
 
 
 
 print $sock "$tmpArr[0]\n";
 
 $valid = <$sock>;
-chop($valid);
+chomp($valid);
 
 if($valid eq "400")
 {
    print $sock "$tmpArr[1]\n";
    $valid = <$sock>;
+   chomp($valid);
    if($valid eq "400")
    {
 
       for ($i = 2; $i < scalar(@tmpArr); $i++) 
       {
-          print $sock "$tmpArr[$i]\n";
+          print $sock "$tmpArr[$i]";
       }
       # server need's this to know when to stop receiving the file!!!
       print $sock "^D\n";
       $valid = <$sock>;
+      chomp($valid);
       
    }
 }
@@ -93,7 +97,7 @@ if (defined($valid)) {
     } elsif ($valid eq "1") { 
         print "Error: Class name is not valid.\n";
 
-    } elsif ($valid eq "2\n") {
+    } elsif ($valid eq "2") {
         print "Error: Filename is not valid.\n";
 
     } elsif ($valid eq "3") {
@@ -102,7 +106,7 @@ if (defined($valid)) {
     } elsif ($valid eq "4") {
         print "File submit failed.\n";
 
-    } elsif ($valid eq "5\n") {
+    } elsif ($valid eq "5") {
         print "File submit successful.\n";
         close($sock);
         exit(1);
