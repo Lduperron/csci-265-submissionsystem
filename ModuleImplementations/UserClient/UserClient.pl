@@ -66,11 +66,11 @@ print $sock "$tmpArr[0]\n";
 $valid = <$sock>;
 chop($valid);
 
-if($valid == "400")
+if($valid eq "400")
 {
    print $sock "$tmpArr[1]\n";
    $valid = <$sock>;
-   if($valid == "400")
+   if($valid eq "400")
    {
 
       for ($i = 2; $i < scalar(@tmpArr); $i++) 
