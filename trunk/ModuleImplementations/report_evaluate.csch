@@ -7,27 +7,24 @@ set course = $1
 set assignement  = $2
 set sName = $3
 set errorCount = 0
-cd ../courses/$1/assignment/$2/student/$3
-cd tact
-rm -f *
-cd ../
-rm -f errors.txt
-rm -f summary.txt
-make
-cd ../../
-set numOfCases = `ls -l tinp | wc -l`
+rm -f ../courses/$1/assignment/$2/student/$3/tact/*
+
+rm -f ../courses/$1/assignment/$2/student/$3/errors.txt ../courses/$1/assignment/$2/student/$3/summary.txt
+
+make ../courses/$1/assignment/$2/student/$3/makefile
+set numOfCases = `ls -l ../courses/$1/assignment/$2/tinp | wc -l`
 @ numOfCases-- 
 set coursecounter = 0;
 while($coursecounter < $numOfCases)
-   foreach line(cat ./tinp/$coursecounter.txt)
-      ./$line >> ./student/$3/tact/$coursecounter.txt
+   foreach line(cat ../courses/$1/assignment/$2/tinp/$coursecounter.txt)
+      ../courses/$1/assignment/$2/student/$3/$line >> ../courses/$1/assignment/$2/student/$3/tact/$coursecounter.txt
          
-     if({ diff -f ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt } != 0) then
+     if({ diff -f ../courses/$1/assignment/$2/texp/$coursecounter.txt ../courses/$1/assignment/$2/student/$3/tact/$coursecounter.txt } != 0) then
          @ errorCount++
-         diff ./texp/$coursecounter.txt ./student/$3/tact/$coursecounter.txt >> ./student/$3/errors.txt
+         diff ../courses/$1/assignment/$2/texp/$coursecounter.txt ../courses/$1/assignment/$2/student/$3/tact/$coursecounter.txt >> ../courses/$1/assignment/$2/student/$3/errors.txt
       endif
       @ coursecounter++
    end
 end
-echo "Number of test cases ran: $numOfCases" >> summary.txt
-echo "Number of errors encountered: $errorCount" >> summary.txt
+echo "Number of test cases ran: $numOfCases" >> ../courses/$1/assignment/$2/student/$3/summary.txt
+echo "Number of errors encountered: $errorCount" >> ../courses/$1/assignment/$2/student/$3/summary.txt
