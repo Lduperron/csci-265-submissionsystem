@@ -2,7 +2,7 @@
 
 $| = 1;
 
-$SIG{'PIPE'} = 'IGNORE';
+$SIG{"PIPE"} = "IGNORE";
 
 use IO::File;
 use IO::Socket;
@@ -19,9 +19,9 @@ use strict;
 use warnings;
 
 my $sock = new IO::Socket::INET (
-                              LocalHost => '',
-                              LocalPort => '8585',
-                              Proto => 'tcp',
+                              LocalHost => "",
+                              LocalPort => "8585",
+                              Proto => "tcp",
 			                     Listen => 3,
                               Reuse => 1
                               );
@@ -48,21 +48,21 @@ while(my $new_sock = $sock->accept()) {
                 ($user, $password, $course) = split(":", $line);
                 my $pass = Passmod->new();
                 if (!($pass->verify($user, $password))) { #Check password
-                    print $new_sock '0';    #user or password is incorrect
+                    print $new_sock "0\n";    #user or password is incorrect
                     close($new_sock);
                     last; #break out of for loop
                 } elsif (!isEnrolled($studentPath, $user, $course)) {
-                    print $new_sock '1';    #user isn't in that course
+                    print $new_sock "1\n";    #user isn"t in that course
                     close($new_sock);
                     last;
                 }
-
+                print $new_sock "400\n";
             } elsif ($i == 1 ) {
                 chomp $line;    # name of assignment
                 $fileName = $line;
-                @asgm = split (".", $line);
+                @asgm = split (".");
                 if (!validAsgm ($asgm[0], $course)) {
-                    print $new_sock '2'; #assignment doesn't exist
+                    print $new_sock "2\n"; #assignment doesn"t exist
                     close($new_sock);
                     last;
                 }
@@ -71,17 +71,18 @@ while(my $new_sock = $sock->accept()) {
                 my $subDate = dateTime( $serverTime[4] , $serverTime[1] , $serverTime[2]);
    
                 if (!onTime( $subDate, $line, $course)) {
-                    print $new_sock '3';
+                    print $new_sock "3\n";
                     close($new_sock);
                     last;
                 }
+                print $new_sock "400\n";
             }elsif ($i == 2) {
                chomp $line;
                my $length = $line;
                #length is expected # of lines for submission file
                #make txt file in correct directory & store socket file in it
                # with user file already in assignment dir
-               unless(open ($submsn, '<', '>'.$assignmentsPath . $course . "/" . $asgm[0] . "/" . $user. "/" . $fileName)) {
+               unless(open ($submsn, "<", ">".$assignmentsPath . $course . "/" . $asgm[0] . "/" . $user. "/" . $fileName)) {
 	               die "\nUnable to create $fileName\n";
                }
                my $j = 0;
@@ -93,11 +94,11 @@ while(my $new_sock = $sock->accept()) {
                   $j++;
                }
                if ($j != $length){
-                  print $new_sock "4"; #file was unexpected length
+                  print $new_sock "4\n"; #file was unexpected length
                   close($new_sock);
                   unlink($submsn);   
                }else{
-                  print $new_sock "5";
+                  print $new_sock "5\n";
                   close ($new_sock);
                }
                last;
@@ -118,7 +119,7 @@ sub isEnrolled #path, user, course
       or die("Unable to open file ". $path);
 
    while (<$students>) {
-      my @student = split(':', $_);
+      my @student = split(":", $_);
       my $student = shift(@student);
    
       chomp($student);
@@ -141,12 +142,12 @@ sub validAsgm # assignment path, assignment name
    my $course = shift;
    
 	# read assignments file for current course
-	opendir(my $assignments, "<", $assignmentsPath.$course.$asgm)
-		or die("Unable to open directory ". $assignmentsPath.$course. $asgm);
+	open(my $assignments, "<", $assignmentsPath.$course. "/".$asgm)
+		or die("Unable to open file ". $assignmentsPath.$course. $asgm);
 
 	# create assignments, tinp, and texp directories
 	while (<$assignments>) {
-      my @assignment = split(':', $_);
+      my @assignment = split(":", $_);
       my $assignment = shift(@assignment);
       if ($assignment eq $asgm) {
          return 1;
@@ -158,7 +159,7 @@ sub validAsgm # assignment path, assignment name
 
 sub onTime # checks if file is on time
            # compares date it was submitted with due date
-           #if sub<=due, it's good
+           #if sub<=due, it"s good
 {
    my $subDate = shift;
    my $asgm = shift;
@@ -172,7 +173,7 @@ sub onTime # checks if file is on time
 
 	# create assignments, tinp, and texp directories
 	while (<$assignments>) {
-      my @assignment = split(':', $_);
+      my @assignment = split(":", $_);
       my $assignment = shift(@assignment);
       my $asgmDueDate = shift(@assignment);
       if ($assignment eq $asgm) {
