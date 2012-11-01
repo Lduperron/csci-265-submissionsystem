@@ -61,8 +61,8 @@ while(my $new_sock = $sock->accept()) {
                 chomp $line;    # name of assignment
                 $fileName = $line;
                 @asgm = split (".", $line);
-                if (!validAsgm ($line, $course)) {
-                    print $new_sock '2';
+                if (!validAsgm ($asgm[0], $course)) {
+                    print $new_sock '2'; #assignment doesn't exist
                     close($new_sock);
                     last;
                 }
@@ -141,8 +141,8 @@ sub validAsgm # assignment path, assignment name
    my $course = shift;
    
 	# read assignments file for current course
-	open(my $assignments, "<", $assignmentsPath.$course. $asgm)
-		or die("Unable to open file ". $assignmentsPath.$course. $asgm);
+	opendir(my $assignments, "<", $assignmentsPath.$course. "/" .$asgm)
+		or die("Unable to open directory ". $assignmentsPath.$course. $asgm);
 
 	# create assignments, tinp, and texp directories
 	while (<$assignments>) {
