@@ -1,4 +1,4 @@
-submit : UserClient.pl
+submit : UserClient.pl testbench.csh stub.pl
 
 	cp UserClient.pl submit
 	chmod u+x submit
@@ -13,3 +13,4 @@ submit : UserClient.pl
 clean :
 	rm submit
 	rm testbench
+	rm testservserofDOOM

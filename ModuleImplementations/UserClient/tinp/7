@@ -1,1 +1,1 @@
-perl UserClient.pl matthew math top1 file.txt
+./submit matthew math top1 file.txt

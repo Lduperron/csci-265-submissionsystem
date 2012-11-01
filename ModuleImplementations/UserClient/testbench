@@ -1,29 +1,31 @@
 #!/bin/csh
 
-set test_count = 0;
-set error_count = 0;
+set test_count = 0
+set error_count = 0
+set serv = "./testservserofDOOM &"
+echo $serv > file.csh
+csh file.csh >& dump.txt
 
-perl stub.pl &;
-set pidofstub;
-$pidofstub = `pgrep stub` ;
-echo $pidofstub;
+echo "BAKC FROM THE DEAD"
+set pidofstub
+$pidofstub < `pgrep testservserofDOOM` 
+echo $pidofstub
 foreach F (tinp/*) 
     @ test_count++
-    set T = ${F:t}      
+    set T = $F:t
       
-    `cat tinp/$T` >! tact/$T    
+    `cat tinp/$T` >& tact/$T    
 
-    diff texp/$T tact/$T   
+    diff texp/$T tact/$T  
     if ($status) then
         echo Error in test $test_count
         @ error_count++
     endif 
 end
 
-kill -9 $pidofstub;
+set ckill = "killall testservserofDOOM"
+echo $ckill > ckill.csh
+csh ckill.csh
 
-echo "pgrep stub";
-pgrep stub
-echo " ";
 echo UserClient Test Set 1 Results:
 echo $test_count tests were performed with $error_count errors found.

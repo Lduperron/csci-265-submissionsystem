@@ -1,1 +1,1 @@
-perl UserClient.pl matthew math
+./submit matthew math
