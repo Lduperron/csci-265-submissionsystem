@@ -43,9 +43,9 @@ if ($status) then
 endif
 
 #Test 3#######################################################################
-set pidofstub2
-$pidofstub2 < `pgrep stub2`
-echo $pidofstub2
+set pidofstub
+$pidofstub < `pgrep stub2`
+echo $pidofstub
 
 @ test_count++
 set F = tinp2/12

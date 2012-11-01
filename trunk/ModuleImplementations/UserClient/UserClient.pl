@@ -9,7 +9,7 @@ use warnings;
 
 $sock = new IO::Socket::INET (
                               PeerAddr => 'localhost',
-                              PeerPort => '9001', 
+                              PeerPort => '8585', 
                               Proto => 'tcp'
                              );
 if (!$sock) {
