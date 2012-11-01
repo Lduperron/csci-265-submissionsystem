@@ -1,2 +1,12 @@
-[1] 19847
-Error: Unable to create socket: Address already in use
+[1] 19966
+all good
+CLOSE
+name
+pass
+class
+all good
+CLOSE
+all good
+CLOSE
+all good
+CLOSE
