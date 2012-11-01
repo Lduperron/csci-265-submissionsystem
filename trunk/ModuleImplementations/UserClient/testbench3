@@ -1,0 +1,19 @@
+#!/bin/csh
+
+set test_count = 0;
+set error_count = 0;
+ 
+@ test_count++
+set F = tinp2/12
+set T = ${F:t}      
+      
+`cat tinp2/$T` >! tact2/$T    
+
+diff texp2/$T tact2/$T   
+if ($status) then
+    echo Error in test $test_count
+    @ error_count++
+endif 
+
+echo UserClient Test Set 3 Results:
+echo $test_count tests were performed with $error_count errors found.
