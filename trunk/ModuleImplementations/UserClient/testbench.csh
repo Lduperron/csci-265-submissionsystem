@@ -43,9 +43,9 @@ if ($status) then
 endif
 
 #Test 3#######################################################################
-set pidofstub
-$pidofstub < `pgrep stub2`
-echo $pidofstub
+set pidofstub2
+$pidofstub2 < `pgrep stub2`
+echo $pidofstub2
 
 @ test_count++
 set F = tinp2/12
@@ -59,9 +59,9 @@ if ($status) then
     @ error_count++
 endif 
 
-set ckill = "killall stub2"
-echo $ckill > ckill.csh
-csh ckill.csh
+set ckill2 = "killall stub2"
+echo $ckill2 > ckill.csh
+csh ckill2.csh
 
 echo UserClient Test Results:
 echo $test_count tests were performed with $error_count errors found.
