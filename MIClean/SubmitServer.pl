@@ -20,7 +20,7 @@ use warnings;
 
 my $sock = new IO::Socket::INET (
                               LocalHost => "",
-                              LocalPort => "8585",
+                              LocalPort => "48585",
                               Proto => "tcp",
 			                     Listen => 3,
                               Reuse => 1
@@ -29,9 +29,9 @@ die "Error: Unable to create socket: $!\n" unless $sock;
 
 my $root = "$FindBin::Bin"."/../../";
 my $configPath = $root . "config/";
-my $studentPath =  $configPath ."StudentConfig.txt";
-my $coursesConf = $configPath. "CourseConfig.txt";
-my $coursesPath =  $configPath . "courses/";
+my $studentPath = $root . "config/StudentConfig.txt";
+my $coursesConf =$root . "config/CourseConfig.txt";
+my $coursesPath = $root . "config/courses/";
 my $assignmentsPath = $root . "courses/";
 my $coursePath;
 my $course;
@@ -40,11 +40,15 @@ my $password;
 my $fileName;
 my @asgm;
 my $submsn;
-
-while(my $new_sock = $sock->accept()) {    
-    for (my $i = 0; $i < 4; $i++) {        
+my $asgmName;
+print "before while\n";
+while(my $new_sock = $sock->accept()) {
+    print "inwhile\n";     
+    for (my $i = 0; $i < 4; $i++) { 
+         print "in for\n";       
         my $line = <$new_sock>;        
-        if(defined($line)) {         
+        if(defined($line)) {
+            print "defined line\n";            
             if ($i == 0) {
                 chomp $line;     
                 ($user, $password, $course) = split(":", $line);
@@ -62,45 +66,63 @@ while(my $new_sock = $sock->accept()) {
             } elsif ($i == 1 ) {
                 chomp $line;    # name of assignment
                 $fileName = $line;
-                @asgm = split(/\./, $fileName);
-                if (!validAsgm ($asgm[0], $course)) {
+                print "$fileName\n";
+               
+                ($asgmName, my $asgmType)  = split(/\./, $fileName);
+                print "$asgmName - $asgmType \n";
+                $fileName = $asgmName;
+		if (!validAsgm ($asgmName, $course)) {
                     print $new_sock "2\n"; #assignment doesn't exist
                     close($new_sock);
                     last;
                 }
-                
+                    #asgm.txt stored in asgm directory
                 my @serverTime = split(" ", localtime);
                 my $subDate = dateTime( $serverTime[4] , $serverTime[1] , $serverTime[2]);
                 print "1st $subDate\n";
-                if (!onTime( $subDate, $fileName, $course)) {
+                if (!onTime( $subDate, $asgmName, $course)) {
                     print $new_sock "3\n";
-                    close($new_sock);
+                   
+		    close($new_sock);
                     last;
                 }
                 print $new_sock "400\n";
             }elsif ($i == 2) {
                chomp $line;
                my $length = $line;
+		#print $length;
                #length is expected # of lines for submission file
                #make txt file in correct directory & store socket file in it
                # with user file already in assignment dir
-               my$storePath = $assignmentsPath. $course. "/" . $asgm[0]. "/". $user. "/" . $fileName;
-               unless(open ($submsn, "<", '>'.$storePath)) {
-	               print "\nUnable to create $fileName\n";
-	               print $new_sock "4\n"; #file storage failed
-                  close($new_sock);
-                  last;
+		#print $assignmentsPath . $course . "/" . "/" . $asgmName . "/" . $user. "/" . $fileName;
+
+               unless(open ($submsn, ">" , $assignmentsPath . $course . "/" . $asgmName . "/" . $user. "/" . $fileName)) {
+	               die "\nUnable to create $fileName\n";
                }
                my $j = 0;
-               while ($line = <$new_sock>) {
+               while ($line = <$new_sock>)
+		 {
+		  chomp($line);
+		#print length($line);
+		 if(length($line) == 0)
+	{
+		next;
+	}
                   if($line eq "^D"){
+		      close($submsn);
                      last;
                   }
-                  printf $submsn $line;
+		else{
+		 # print $line;
+                  print $submsn $line , "\n";
                   $j++;
+		}
                }
+		#print $j;
+	#	print "JJJJJJJJJJJ";
                if ($j != $length){
-                  print $new_sock "4\n"; #file storage failed
+ #print "FILE WAS UNEXPECTED LENGTH -";                 
+ print $new_sock "4\n"; #file was unexpected length
                   close($new_sock);
                   unlink($submsn);   
                }else{
@@ -122,7 +144,7 @@ sub isEnrolled #path, user, course
    my $course = shift @_;
    
    open(my $students, "<", $path)
-      or return 0;
+      or die("Unable to open file ". $path);
 
    while (<$students>) {
       my @student = split(":", $_);
@@ -149,7 +171,7 @@ sub validAsgm # assignment path, assignment name
    print "$asgm\n";
 	# read assignments file for current course
 	open(my $assignments, "<", $coursesPath.$course. ".txt")
-		or return 0;
+		or die("Unable to open file ". $coursesPath.$course. ".txt");
 
 	# create assignments, tinp, and texp directories
 	while (<$assignments>) {
@@ -186,7 +208,7 @@ sub onTime # checks if file is on time
       my $assignment = shift(@assignment);
       my $asgmDueDate = shift(@assignment);
       print "Due: $asgmDueDate\n";
-      if (($assignment . ".txt") eq $asgm) {
+      if (($assignment) eq $asgm) {
          if ($subDate <= $asgmDueDate) {
             return 1;
          }else{
@@ -234,7 +256,9 @@ sub dateTime # takes year, month, day & binds into 1 variable
    }else{
       $finalTime = $finalTime . "12";
    }
-   
+
+   $day = sprintf("%0*d", 2, $day); 
+
    $finalTime = $finalTime . $day;
    return $finalTime;
 }
