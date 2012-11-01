@@ -9,7 +9,7 @@ use warnings;
 
 $sock = new IO::Socket::INET (
                               PeerAddr => 'localhost',
-                              PeerPort => '8585', 
+                              PeerPort => '9001', 
                               Proto => 'tcp'
                              );
 die "Error: Unable to connect to the submission server.\n" unless $sock;
@@ -40,7 +40,7 @@ $fname = $tmpFile[(scalar(@tmpFile)-1)];
 @tmpArr = ($tline, $fname);
 # possiohblr issue????
 if (!open(DATA, $ARGV[3])) {
-    print "Can't open $ARGV[3] $!\n";
+    print "Can't open $ARGV[3] $!\n";  #hard enough??
     exit(0);
 }
 
@@ -61,7 +61,7 @@ $tmpArr[2] = $sizeArr;
 print $sock "$tmpArr[0]\n";
 
 $valid = <$sock>;
-
+chop($valid);
 
 if($valid == "400")
 {
@@ -75,7 +75,7 @@ if($valid == "400")
           print $sock "$tmpArr[$i]\n";
       }
       # server need's this to know when to stop receiving the file!!!
-      print $sock "^D";
+      print $sock "^D\n";
       $valid = <$sock>;
       
    }
@@ -84,7 +84,6 @@ if($valid == "400")
 
 
 if (defined($valid)) { 
-    
     if ($valid eq "0") { 
         print "Error: Username/password is not valid.\n";
 
@@ -100,7 +99,7 @@ if (defined($valid)) {
     } elsif ($valid eq "4") {
         print "File submit failed.\n";
 
-    } elsif ($valid eq "5") {
+    } elsif ($valid eq "5\n") {
         print "File submit successful.\n";
         close($sock);
         exit(1);
