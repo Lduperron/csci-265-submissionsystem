@@ -43,7 +43,10 @@ if ($status) then
 endif
 
 #Test 3#######################################################################
-set pidofstub
+set serv = "./stub2 &"
+echo $serv > file2.csh
+csh file2.csh >& dump2.txt
+
 $pidofstub < `pgrep stub2`
 echo $pidofstub
 
