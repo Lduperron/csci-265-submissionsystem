@@ -12,7 +12,10 @@ $sock = new IO::Socket::INET (
                               PeerPort => '9001', 
                               Proto => 'tcp'
                              );
-die "Error: Unable to connect to the submission server.\n" unless $sock;
+if (!$sock) {
+	print "Error: Unable to connect to the submission server.\n";
+	exit(0);
+}
 
 if (scalar(@ARGV) == 0) {
     print "Error: No username, password, class name, or file name submitted.\n"; 
