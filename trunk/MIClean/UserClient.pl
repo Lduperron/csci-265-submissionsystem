@@ -8,11 +8,11 @@ use IO::Socket;
 use warnings;
 
 $sock = new IO::Socket::INET (
-                              PeerAddr => 'localhost', #change to address
+                              PeerAddr => 'localhost',
                               PeerPort => '8585', 
                               Proto => 'tcp'
                              );
-die "Error: Unable to connect to the submission server.\n" unless $sock; 
+die "Error: Unable to connect to the submission server.\n" unless $sock;
 
 if (scalar(@ARGV) == 0) {
     print "Error: No username, password, class name, or file name submitted.\n"; 
@@ -35,10 +35,10 @@ $tline = join(":", $ARGV[0], $ARGV[1], $ARGV[2]);
 
 @tmpFile = split('/', $ARGV[3]); 
 
-$fname = $tmpFile[(scalar(@tmpFile)-1)]; 
+$fname = $tmpFile[(scalar(@tmpFile)-1)];
 
 @tmpArr = ($tline, $fname);
-
+# possiohblr issue????
 if (!open(DATA, $ARGV[3])) {
     print "Can't open $ARGV[3] $!\n";
     exit(0);
@@ -56,34 +56,58 @@ $sizeArr = scalar(@tmpArr) - 3;
 
 $tmpArr[2] = $sizeArr;
 
-for ($i = 0; $i < scalar(@tmpArr); $i++) {
-    print $sock "$tmpArr[$i]\n";
-}
-# server need's this to know when to stop receiving the file!!!
-print $sock "^D";
+
+
+print $sock "$tmpArr[0]\n";
 
 $valid = <$sock>;
 
-if (defined($valid)) {       
+
+if($valid == "400")
+{
+   print $sock "$tmpArr[1]\n";
+   $valid = <$sock>;
+   if($valid == "400")
+   {
+
+      for ($i = 2; $i < scalar(@tmpArr); $i++) 
+      {
+          print $sock "$tmpArr[$i]\n";
+      }
+      # server need's this to know when to stop receiving the file!!!
+      print $sock "^D";
+      $valid = <$sock>;
+      
+   }
+}
+
+
+
+if (defined($valid)) { 
+    
     if ($valid eq "0") { 
         print "Error: Username/password is not valid.\n";
-        exit(0);
+
     } elsif ($valid eq "1") { 
         print "Error: Class name is not valid.\n";
-        exit(0);
+
     } elsif ($valid eq "2") {
         print "Error: Filename is not valid.\n";
-        exit(0);
+
     } elsif ($valid eq "3") {
         print "Error: Assignment is late.\n";
-        exit(0);
+
     } elsif ($valid eq "4") {
         print "File submit failed.\n";
-        exit(0);
+
     } elsif ($valid eq "5") {
         print "File submit successful.\n";
+        close($sock);
         exit(1);
     }
+
+    close($sock);
+    exit(0);
 }
 
 exit(0); #If the function gets here it must have failed
