@@ -90,7 +90,7 @@ while(my $new_sock = $sock->accept()) {
                #length is expected # of lines for submission file
                #make txt file in correct directory & store socket file in it
                # with user file already in assignment dir
-               unless(open ($submsn, "<", ">".$assignmentsPath . $course . "/" . $asgm[0] . "/" . $user. "/" . $fileName)) {
+               unless(open ($submsn, "<", ">".$assignmentsPath . $course . "/" . $fileName . "/" . $user. "/" . $fileName)) {
 	               die "\nUnable to create $fileName\n";
                }
                my $j = 0;
