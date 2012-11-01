@@ -39,8 +39,11 @@ my $password;
 my $fileName;
 my @asgm;
 my $submsn;
-while(my $new_sock = $sock->accept()) {     
-    for (my $i = 0; $i < 4; $i++) {        
+print "before while\n";
+while(my $new_sock = $sock->accept()) {
+    print "inwhile\n";     
+    for (my $i = 0; $i < 4; $i++) { 
+         print "in for\n";       
         my $line = <$new_sock>;        
         if(defined($line)) {
             print "defined line\n";            
