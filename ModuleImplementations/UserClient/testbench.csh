@@ -59,9 +59,9 @@ if ($status) then
     @ error_count++
 endif 
 
-set ckill2 = "killall stub2"
-echo $ckill2 > ckill.csh
-csh ckill2.csh
+set ckill = "killall stub2"
+echo $ckill > ckill.csh
+csh ckill.csh
 
 echo UserClient Test Results:
 echo $test_count tests were performed with $error_count errors found.
