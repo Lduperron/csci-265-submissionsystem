@@ -29,9 +29,9 @@ die "Error: Unable to create socket: $!\n" unless $sock;
 
 my $root = "$FindBin::Bin"."/../../";
 my $configPath = $root . "config/";
-my $studentPath = $root . "config/StudentConfig.txt";
-my $coursesConf =$root . "config/CourseConfig.txt";
-my $coursesPath = $root . "config/courses/";
+my $studentPath =  $configPath ."StudentConfig.txt";
+my $coursesConf = $configPath. "CourseConfig.txt";
+my $coursesPath =  $configPath . "courses/";
 my $assignmentsPath = $root . "courses/";
 my $coursePath;
 my $course;
@@ -40,14 +40,11 @@ my $password;
 my $fileName;
 my @asgm;
 my $submsn;
-print "before while\n";
-while(my $new_sock = $sock->accept()) {
-    print "inwhile\n";     
-    for (my $i = 0; $i < 4; $i++) { 
-         print "in for\n";       
+
+while(my $new_sock = $sock->accept()) {    
+    for (my $i = 0; $i < 4; $i++) {        
         my $line = <$new_sock>;        
-        if(defined($line)) {
-            print "defined line\n";            
+        if(defined($line)) {         
             if ($i == 0) {
                 chomp $line;     
                 ($user, $password, $course) = split(":", $line);
@@ -65,16 +62,13 @@ while(my $new_sock = $sock->accept()) {
             } elsif ($i == 1 ) {
                 chomp $line;    # name of assignment
                 $fileName = $line;
-                print "$fileName\n";
-               
-                #(my $asgmName, my $asgmType)  = split('.', $fileName);
-                #print "$asgmName - $asgmType \n";
-                if (!validAsgm ($fileName, $course)) {
+                @asgm = split(/\./, $fileName);
+                if (!validAsgm ($asgm[0], $course)) {
                     print $new_sock "2\n"; #assignment doesn't exist
                     close($new_sock);
                     last;
                 }
-                    #asgm.txt stored in asgm directory
+                
                 my @serverTime = split(" ", localtime);
                 my $subDate = dateTime( $serverTime[4] , $serverTime[1] , $serverTime[2]);
                 print "1st $subDate\n";
@@ -90,19 +84,23 @@ while(my $new_sock = $sock->accept()) {
                #length is expected # of lines for submission file
                #make txt file in correct directory & store socket file in it
                # with user file already in assignment dir
-               unless(open ($submsn, "<", ">".$assignmentsPath . $course . "/" . $fileName . "/" . $user. "/" . $fileName)) {
-	               die "\nUnable to create $fileName\n";
+               my$storePath = $assignmentsPath. $course. "/" . $asgm[0]. "/". $user. "/" . $fileName;
+               unless(open ($submsn, "<", '>'.$storePath)) {
+	               print "\nUnable to create $fileName\n";
+	               print $new_sock "4\n"; #file storage failed
+                  close($new_sock);
+                  last;
                }
                my $j = 0;
                while ($line = <$new_sock>) {
-                  if($line=="^D"){
+                  if($line eq "^D"){
                      last;
                   }
                   printf $submsn $line;
                   $j++;
                }
                if ($j != $length){
-                  print $new_sock "4\n"; #file was unexpected length
+                  print $new_sock "4\n"; #file storage failed
                   close($new_sock);
                   unlink($submsn);   
                }else{
@@ -124,7 +122,7 @@ sub isEnrolled #path, user, course
    my $course = shift @_;
    
    open(my $students, "<", $path)
-      or die("Unable to open file ". $path);
+      or return 0;
 
    while (<$students>) {
       my @student = split(":", $_);
@@ -151,13 +149,13 @@ sub validAsgm # assignment path, assignment name
    print "$asgm\n";
 	# read assignments file for current course
 	open(my $assignments, "<", $coursesPath.$course. ".txt")
-		or die("Unable to open file ". $coursesPath.$course. ".txt");
+		or return 0;
 
 	# create assignments, tinp, and texp directories
 	while (<$assignments>) {
       my @assignment = split(":", $_);
       my $assignment = shift(@assignment);
-      if ( ($assignment . ".txt") eq $asgm) {
+      if ( ($assignment) eq $asgm) {
          return 1;
       }
       print "$assignment\n";
