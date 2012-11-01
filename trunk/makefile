@@ -37,4 +37,5 @@ post:
 	touch ../StageArea/courses/csci260/Pex1/tinp/0.txt
 	touch ../StageArea/courses/csci260/Pex1/texp/0.txt
 	touch ../StageArea/courses/csci260/Pex1/makefile
-
+	cp StageREQ/Pex1.C ../StageArea/bin
+	cat ../StageArea/students/bethpasswordSheet.txt
