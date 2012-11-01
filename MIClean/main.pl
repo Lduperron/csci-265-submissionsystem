@@ -35,8 +35,7 @@ my $PASSGEN="PASSGEN";
 my $CPASSALL="CPASSALL";
 my $CPASS="CPASS";
 
-my $REPS="REPSIMP";
-my $REPD="REPDET";
+my $REPORT="REPORT";
 
 my $QUIT="Q";
 my $EXIT="EXIT";
@@ -193,10 +192,8 @@ my $passNumber;
             &clearPass($pass,$_);
             last;
          }
-      }elsif($input eq $REPS){
-         &Report("simple");
-      }elsif($input eq $REPD){
-         &Report("details");
+      }elsif($input eq $REPORT){
+         &Report();
       }elsif($input eq $H){
          &printHelp;
       }elsif($input eq $HELP){
@@ -436,24 +433,16 @@ sub clearPass
 
 sub Report
 {
-   my $sName;
    my $report;
    my $cReq; # course to preform the report on
    my $aReq; # assignment to preform the report on
-   my $isDetailed; # 0 if no, 1 if yes
 
    my $cValid = 0; # is the course valid? 0 if no, 1 if yes
    my $aValid = 0; # is the assignment valid? 0 if no, 1 if yes
 
    my $testType = 1; # one or two for cs1 and cs2 style testeings.
 
-   $sName = shift;
 
-   if($sName eq "simple"){
-      $isDetailed = 0;
-   }else{
-      $isDetailed = 1;
-   }
    print "Generate report for course:\n";
    while($cReq=<>){
       if(defined($cReq)){
@@ -504,15 +493,22 @@ sub Report
          open(my $students, "<", $studentsConf)
 	         or die("Unable to open file ". $studentsConf);
 
-         #for all students
          while (<$students>) {
 	         my @student = split(':', $_);
-	         $sName = shift(@student);
+	         my $sName = shift(@student);
 	         chomp($sName);
-
-            system("$root/bin/Mod/report $cReq $aReq $sName $isDetailed");
-            print "A report has been generated for each student.\n";
+         # in the course...
+            while (my $course = shift(@student)) {
+		         chomp($course);
+               if($course eq $cReq){
+                  system("$root/bin/Mod/report $cReq $aReq $sName");
+                  print "A report has been generated in courses/$cReq/$aReq/$sName\n";
+               }
+            }
          }
+
+
+
       }else{
          print "The assignment is not valid\n";
       }
@@ -543,9 +539,7 @@ sub printHelp
    print "$CPASSALL \tClear all passwords for ALL students\n";
    print "$CPASS \t\tClear all passwords for a SINGLE student\n\n";
 
-   print "$REPS \tDisplay the SUMMARY results of an assignment report\n";
-   print "$REPD \t\tDisplay the DETAILED results of an assignment report\n\n";
-# what is the name of this exectutable? (main.pl)
+   print "$REPORT \t\tCreate a report for each student in a course and assignment.\n\n";
    print "$QUIT \t\tQuit the Admin Client\n";
    print "$HELP \t\tDisplay this message\n";
    print "__________________________________________________________________________\n";

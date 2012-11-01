@@ -9,7 +9,7 @@ use warnings;
 
 $sock = new IO::Socket::INET (
                               PeerAddr => 'localhost',
-                              PeerPort => '6709', 
+                              PeerPort => '8585', 
                               Proto => 'tcp'
                              );
 die "Error: Unable to connect to the submission server.\n" unless $sock;

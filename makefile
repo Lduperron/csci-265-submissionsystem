@@ -21,8 +21,8 @@ stage:
 	cp MIClean/UserClient.pl ../StageArea/bin/submit
 	chmod u+x ../StageArea/bin/submit
 
-	cp MIClean/report.csch ../StageArea/bin/Mod/report
-	cp StageREQ/report_evaluate.csch ../StageArea/bin/Mod/report_evaluate
+	cp MIClean/report.csh ../StageArea/bin/Mod/report
+	cp StageREQ/report_evaluate.csh ../StageArea/bin/Mod/report_evaluate
 	chmod u+x ../StageArea/bin/Mod/report
 	chmod u+x ../StageArea/bin/Mod/report_evaluate
 
@@ -32,3 +32,9 @@ clean:
 cleanStage:
 	make clean
 	make stage
+
+post:
+	touch ../StageArea/courses/csci260/Pex1/tinp/0.txt
+	touch ../StageArea/courses/csci260/Pex1/texp/0.txt
+	touch ../StageArea/courses/csci260/Pex1/makefile
+
