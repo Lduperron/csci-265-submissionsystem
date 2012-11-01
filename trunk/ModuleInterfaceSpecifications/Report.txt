@@ -57,3 +57,5 @@ and is populated (test - expected result)
 program is ran) directory, and assignment + student directories under assignment
 - tinp is formatted in such a way that it will be ./program -flags where ./program is
 binary produced by the makefile
+- files in tinp will also have a numeric file name (starting at 0) and will have a
+file extention of .txt
