@@ -12,7 +12,10 @@ $sock = new IO::Socket::INET (
                               PeerPort => '8585', 
                               Proto => 'tcp'
                              );
-die "Error: Unable to connect to the submission server.\n" unless $sock;
+if (!$sock) {
+	print "Error: Unable to connect to the submission server.\n";
+	exit(0);
+}
 
 if (scalar(@ARGV) == 0) {
     print "Error: No username, password, class name, or file name submitted.\n"; 
@@ -38,45 +41,49 @@ $tline = join(":", $ARGV[0], $ARGV[1], $ARGV[2]);
 $fname = $tmpFile[(scalar(@tmpFile)-1)];
 
 @tmpArr = ($tline, $fname);
-# possiohblr issue????
+
 if (!open(DATA, $ARGV[3])) {
-    print "Can't open $ARGV[3] $!\n";
+    print "Can't open $ARGV[3] $!\n";  #hard enough??
     exit(0);
 }
 
 $tmpArr[2] = '0';
 
 for ($i = 3; <DATA>; $i++) {
-    $tmpArr[$i] = $_; 
+
+     $tmpArr[$i] = $_;
+
 }  
 
 close DATA;
 
 $sizeArr = scalar(@tmpArr) - 3;
 
-$tmpArr[2] = $sizeArr;
+$tmpArr[2] = $sizeArr."\n";
 
 
 
 print $sock "$tmpArr[0]\n";
 
 $valid = <$sock>;
+chomp($valid);
 
-
-if($valid == "400")
+if($valid eq "400")
 {
    print $sock "$tmpArr[1]\n";
    $valid = <$sock>;
-   if($valid == "400")
+   chomp($valid);
+   if($valid eq "400")
    {
 
       for ($i = 2; $i < scalar(@tmpArr); $i++) 
       {
-          print $sock "$tmpArr[$i]\n";
+          print $sock "$tmpArr[$i]";
       }
       # server need's this to know when to stop receiving the file!!!
-      print $sock "^D";
+      print $sock "^D\n";
       $valid = <$sock>;
+      chomp($valid);
       
    }
 }
@@ -84,7 +91,6 @@ if($valid == "400")
 
 
 if (defined($valid)) { 
-    
     if ($valid eq "0") { 
         print "Error: Username/password is not valid.\n";
 
