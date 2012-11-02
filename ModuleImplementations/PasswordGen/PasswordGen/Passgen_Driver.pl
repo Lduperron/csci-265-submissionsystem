@@ -14,6 +14,12 @@
    {
       print "Passmod returned a generator; students directory is good.  Ready to try generating. \n";
    }
+   else
+   {
+      print "Passmod failed to return a generator!  Did you run the support makefile?\n";
+      print "****************************************************************\n";
+      exit(0);
+   }
    
    print "Printing passgenerator settings:\n";
    
@@ -30,6 +36,13 @@
    $Passmod->setSetting("length", 5);
    $Passmod->setSetting("type", "alnum");
    $Passmod->setSetting("number", 5);
+   
+   print "Printing passgenerator settings:\n";
+   
+   print "Password Type:" , $Passmod->getSetting("type") , "\n";
+   print "Password Length:" , $Passmod->getSetting("length") , "\n";
+   print "Number of Passwords:" , $Passmod->getSetting("number") , "\n";
+   
    $Passmod->generate("amy");
    
     print "Generated passwords were: \n";
@@ -42,7 +55,7 @@
    print "Sending each password generated to verify.  Expected successes:  5 \n";
 
    open(my $passfile , $path) or die;
-      my $i = 0;
+   my $i = 0;
    while($pass = <$passfile>)
    {
       
@@ -54,13 +67,24 @@
          $i++;
          print "Number of successes:  $i\n";
       }
+      else
+      {
+         print "Passmod rejected a valid password.  (FAILED) \n";
+         print "****************************************************************\n";
+         exit(0);
+      }
       
       
       if(!$Passmod->verify($student, $pass))
       {
          print "Retrying verification with same password failed.  (expected) \n";
       }
-      
+      else
+      {
+         print "Passmod accepted a used password (FAILED)\n";
+         print "****************************************************************\n";
+         exit(0);
+      }
    }
    
    if($i == 5)
@@ -70,19 +94,24 @@
       {
          print "Null password rejected. (expected) \n";
       }
-      
+      else
+      {
+         print "Passmod accepted a null password for a student with an empty password file (FAILED)\n";
+         print "****************************************************************\n";
+         exit(0);
+      }
       print "Sending string password to verify: \n";
       if(!$Passmod->verify($student, "This is a password."))
       {
          print "String password rejected. (expected) \n";
       }
-      
+      else
+      {
+         print "Passmod accepted an incorrect password for a student on an empty password file (FAILED)\n";
+         print "****************************************************************\n";
+         exit(0);
+      }
    }
-   else
-   {
-      "Password verification failed!  Saddening.\n";
-   }
-
    
    print "Trying password verification on non-existant student\n";
    
@@ -90,7 +119,12 @@
       {
          print "Non-existant student rejected. (expected) \n";
       }
-   
+   else
+      {
+         print "Passmod verified the password of a non-existant student (FAILED)";
+         print "****************************************************************\n";
+         exit(0);
+      }
    print "All tests succeded!  Passgen module appears ready for use.";
    
    
