@@ -2,8 +2,6 @@
 
 $| = 1;
 
-open(INFILE,@ARGV);
-
 use IO::Socket;
 use warnings;
 
@@ -14,24 +12,24 @@ $sock = new IO::Socket::INET (
                              );
 if (!$sock) {
         print "Error: Unable to connect to the submission server.\n";
-        exit(0);
+        exit(1);
 }
 
 if (scalar(@ARGV) == 0) {
     print "Error: No username, password, class name, or file name submitted.\n"; 
-    exit(0);
+    exit(1);
 } elsif (scalar(@ARGV) == 1) {
     print "Error: No password, class name, or file name submitted.\n";
-    exit(0);
+    exit(1);
 } elsif (scalar(@ARGV) == 2) {
     print "Error: No class name or file name submitted.\n";
-    exit(0);
+    exit(1);
 } elsif (scalar(@ARGV) == 3) {
     print "Error: No file name submitted.\n";
-    exit(0);
+    exit(1);
 } elsif (scalar(@ARGV) >= 5) {
     print "Error: Too many input parameters.\n";
-    exit(0);
+    exit(1);
 }
 
 $tline = join(":", $ARGV[0], $ARGV[1], $ARGV[2]);
@@ -44,7 +42,7 @@ $fname = $tmpFile[(scalar(@tmpFile)-1)];
 
 if (!open(DATA, $ARGV[3])) {
     print "Can't open $ARGV[3] $!\n";  #hard enough??
-    exit(0);
+    exit(1);
 }
 
 $tmpArr[2] = '0';
@@ -109,11 +107,11 @@ if (defined($valid)) {
     } elsif ($valid eq "5") {
         print "File submit successful.\n";
         close($sock);
-        exit(1);
+        exit(0);
     }
 
     close($sock);
-    exit(0);
+    exit(1);
 }
 
-exit(0); #If the function gets here it must have failed
+exit(1); #If the function gets here it must have failed
