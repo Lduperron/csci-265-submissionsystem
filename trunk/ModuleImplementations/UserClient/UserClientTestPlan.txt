@@ -8,9 +8,16 @@ server.
 
 This script has 6 subdirectories in the directory it is in:
 tinp --> the location of the input parameters for the test cases that use 
-         stub.pl (named stub after run through makefile) as the server
+         stub.pl (named stub after run through makefile) as the server.  
+         These test cases test all different invalid input possibilities 
+         (i.e. all variations of too many or too few command line parameters), 
+         the failed file open error handling, and the handling of all of the 
+         codes passed back to UserClient.pl by the server (except late the 
+         assignment code).
 tinp2 --> the location of the input parameters for the test cases that do not 
-	      use stub.pl as the server
+	        use stub.pl as the server.  These test cases test the failed socket
+          creation error handling and UserClient's handling of the late 
+          assignment code.
 texp --> the expected values for the test cases using stub.pl as the server
 texp2 --> the expected values for the test cases not using stub.pl as the 
           server
