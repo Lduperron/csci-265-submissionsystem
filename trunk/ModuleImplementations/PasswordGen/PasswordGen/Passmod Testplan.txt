@@ -1,0 +1,14 @@
+Passmod Testplan:
+
+   The passmod testing system consists of a driver that tests the basic functionality of the module.  The driver loads the module, initalizes a generator, and then tests the public functions of the module.
+   
+   The driver:
+      Prints out the default settings of the module for verification
+      Generates passwords according to those defaults, and then prints them out for inspection.
+      Modifies all the settings via the setSetting function to new settings and then prints them out via getSetting
+      Generates passwords for a new user, prints them out, and then tries each one against the verify function twice.  The first one is expected to work, while
+      the second attempt should fail because Passmod should have invalidiated the password when it returned true the first time.  The password now is simply another random string to the verify function.
+      Both a blank password and a string password are sent to the previous user, who now has an empty password file, to ensure that those are still rejected without message.
+      Finally, an attempt is made to verify a non-existant user, which should fail.
+      
+      These tests serve to ensure that the module correctly changes settings when provided with valid changes, generates passwords correctly, and verifies them correctly under normal operation.

@@ -20,8 +20,8 @@ BEGIN  # Finds the position of the module.
 }
 
   
-  use lib "$moduledirectory";
-  use lib "$moduledirectory/Session-Token-0.82/lib";
+  use lib "$moduledirectory";                             #These three libaries are necessary for
+  use lib "$moduledirectory/Session-Token-0.82/lib";      #the local use of Session::Token
   use lib "$moduledirectory/Session-Token-0.82/blib/arch";
   
   use Session::Token;
@@ -30,8 +30,8 @@ BEGIN  # Finds the position of the module.
 
   use Tie::File;
   
-  my $StudentsPath = $moduledirectory."/../../students/";
-   
+  my $StudentsPath = $moduledirectory."/../../students/"; #Students directory is always up two levels relative
+                                                          #to the location of passmod.pm
   our $VERSION = "1.00";
 
   sub new
@@ -47,11 +47,11 @@ BEGIN  # Finds the position of the module.
       $self->reinitializeGenerator();
      
       if(!-d $StudentsPath)  # Makes sure the directory of where our passwords are going to be is valid
-      { 
+      {                      # Returns a null reference to the generator if it's not.
          return 0;
          #system("mkdir ".$StudentsPath);
       }
-      else
+      else  #Ensures we have write access to the students folder.
       {
          system("touch ".$StudentsPath."testfile");
          
