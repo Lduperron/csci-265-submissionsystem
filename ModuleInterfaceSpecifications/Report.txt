@@ -17,7 +17,8 @@ This program will be called via the command line, and will be provided the follo
 Copy the makefile (entitled "makefile") from courses/<COURSENAME>/<ASSIGNMENTNAME> to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>
 Direct make to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/makefile to create the necessary executable file.
 
-The output will be directed to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/tact/ using the same file name as the file in courses/<COURSENAME>/<ASSIGNMENTNAME>/tinp/.
+The output will be directed to courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/tact/ using the same file name as the file in 
+courses/<COURSENAME>/<ASSIGNMENTNAME>/tinp/.
 A diff will then be run to compare that output with the lecturer provided expected files in courses/<COURSENAME>/<ASSIGNMENTNAME>/texp/.
 
 This will produce a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/errors.txt with the output from diff and
