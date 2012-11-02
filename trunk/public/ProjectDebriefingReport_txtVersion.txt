@@ -1,0 +1,55 @@
+Project Debriefing Report
+
+
+Overview
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+This report will indicate general success of the project to develop of the “Assignment Submission System” as requested by Peter Walsh, University-College Professor at Vancouver Island University.
+
+Project Management
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+The tool called Trello proved to be very useful the early-project planing stage. As more hard code became available, Google code, and the commenting system was used to a hight extent  Access to Trello is available at http://www.trello.com on request.
+All code and documentation was stored at a repository at http://code.google.com.  SVN was the revision control system used. SVN proved to be acquit as a version control system. Multiple branches were not required for this project.
+
+Team Members
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+A selection was made from the available CSCI 265 students.  The following people were appointed to the team:
+
+*Matthew Cormons
+*Lochlin Duperron
+*Oliver Jourmel
+*Meara Kimball
+*Marius Loots
+*Evan Seabrook
+
+Team Hierarchy
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+This team worked cooperatively on the project.  A formal Leader was chosen in the final week of the assignment. This person had taken on a management role, and their work was recognized. Oliver Jourmel was appointed leader on Monday, October 29.
+Decision Making Process
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+This team will make major structural decisions with a vote.  
+Majority wins. In the case of a tie, there will be a discussion, using the Conflict Resolution Methodology adopted, and a re-vote. This team did not experience a deadlock, but reached consensus in most decisions.  In the event of continued deadlock, the vote of the leader would not have been considered. This was done to limit the power of the leader.
+Conflict Resolution
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+The “Interest-Based Relational Approach” to conflict resolution was adopting as the working theory.  A good discussion of the approach can be found at https://www.grad.ubc.ca/current-students/gps-graduate-pathways-success/conflict-resolution.
+Meetings
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Formal Team meetings were held every Monday.  Intermediate meetings were scheduled on a need basis.  Minutes were only kept for Formal Team Meetings.
+
+
+Requirements Specifications
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+What to do ?? (THIS NEEDS TO BE FILLED OUT)
+
+
+Issues experienced
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Our inexperience with Perl and C shell, and with the perl implementation of IO::Socket was a challenge. This was a learning experience for all of us, and our knowledge of perl programming has increased. Socket programming was a major hurdle that this team overcome. This team believes that additional class time coverage of sockets and socket programming would have been beneficial.
+Our other priorities to school, family, and work were recognized, and the time requirements that this project had came into conflict, to some extent, with our other responsibilities.
+
+
