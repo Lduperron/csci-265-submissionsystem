@@ -1,0 +1,33 @@
+Customer Demonstration Plan
+-----------------------------------------------------------------------
+Unpack tar ball containing our program
+
+Set up SubmissionSystem using the program's makefile
+
+Create directory containing UserClient.pl and sample assignments 
+(eg Pex1.txt, Pex2.cpp)
+
+Run adminClient, generate passwords for users, start submission server
+
+On same machine, run UserClient.pl from new directory, demonstrating 
+submission of files
+
+   Demonstrate passwords are single use
+      -submit a file
+      -submit a file using the same password
+   
+   Demonstrate user/password check
+      -submit with invalid user
+      -submit with valid user, invalid password
+      
+   Demonstrate course check
+      -submit with valid course user is not enrolled in
+      -submit with invalid course
+      
+   Demonstrate due date check
+      -submit to csci261, Pex2 (due March 14th, 2011)
+      
+Demonstrate reporting funcionality by submitting a random password 
+program and a stack program, & running the automated testing on each.  
+      
+
