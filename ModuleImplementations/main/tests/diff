@@ -67,9 +67,10 @@ while ($lineF1 = <$fh1>) {
 while ($lineF2 = <$f2>) {
 	push (@diffArr, $lineF2);
 }
-#print @diffArr;
-if ($diffArr > 0) {
-	return("errors");
+print @diffArr;
+my $cnt = @diffArr;
+if ($cnt > 0) {
+	exit(1);
 } else {
-	return 0;
+	exit(0);
 }
