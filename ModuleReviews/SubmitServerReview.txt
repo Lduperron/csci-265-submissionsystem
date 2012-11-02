@@ -15,7 +15,8 @@ Absent:
 
 Presented by Marius Loots
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 ML    Comment on why "Find::Bin" was used
          -in case program called from another directory, finds program's
           location)
@@ -43,5 +44,10 @@ OL    isEnrolled & validAsgmn have lots of redundancy between them
 ML    dateTime needs comment explanation
 
       Needs more comments in general
+      
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Less than 5% changed, signed off on Submit Server at 5:05
+
       
 
