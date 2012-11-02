@@ -27,8 +27,7 @@ BEGIN  # Finds the position of the module.
   use Session::Token;
   use strict;
   use warnings;
-  
-  use constant PATH => "../students/";
+
   use Tie::File;
   
   my $StudentsPath = $moduledirectory."/../../students/";
@@ -44,7 +43,6 @@ BEGIN  # Finds the position of the module.
       $self->{type} = "num";
       $self->{length} = 8;
       $self->{number} = 20;
-      $self->{carboncopy} = 1;
       
       $self->reinitializeGenerator();
      
@@ -85,7 +83,6 @@ BEGIN  # Finds the position of the module.
       if(!-d $StudentsPath)  # Makes sure the directory of where our passwords are going to be is valid
       { 
          return 0;
-         #system("mkdir ".$StudentsPath.$target);
       }
       
       open($passfile , ">".$StudentsPath."$target"."passwordSheet.txt");
@@ -96,20 +93,7 @@ BEGIN  # Finds the position of the module.
          print $passfile "\n";
       }
       close $passfile;
-      
-      if($self->{carboncopy})
-      {
-         if(!-d $StudentsPath."Passwords/")  # Makes sure the directory of where our passwords are going to be is valid
-         { 
-            system("mkdir ".$StudentsPath."Passwords/");
-         }
-         
-         my $originalpath = $StudentsPath."$target"."passwordSheet.txt";
-         my $copypath = $StudentsPath."Passwords/$target"."passwordSheet.txt";
-         system("cp $originalpath $copypath");
-         
-      }
-        
+              
      return 1;
      
      
@@ -163,8 +147,8 @@ BEGIN  # Finds the position of the module.
     my $self = shift;
  
     printf "Current Password Type: %s \n" , ($self->{type} eq "num") ? "Numeric Only" : "Alphanumeric";
-    printf "Current Password Length: %s \n " , $self->{length};
-    print "Current Number of Passwords per File: %s \n" , $self->{number};
+    printf "Current Password Length: %s \n" , $self->{length};
+    printf "Current Number of Passwords per File: %s \n" , $self->{number};
  
   }
  
@@ -191,12 +175,7 @@ BEGIN  # Finds the position of the module.
          {
             return $self->{number}
          }
-         
-         if($setting eq "carboncopy")
-         {
-            return $self->{carboncopy}
-         }
-      
+
       }
   }
   
@@ -227,12 +206,7 @@ BEGIN  # Finds the position of the module.
          {
             $self->{number} = $newValue;
          }
-         
-                  
-         if($setting eq "carboncopy")
-         {
-            $self->{carboncopy} = $newValue;
-         }
+
       
       }
   }
