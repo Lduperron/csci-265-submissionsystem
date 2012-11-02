@@ -1,0 +1,64 @@
+[2J[0;0H__________________________________________________________________________
+
+           Submission System  -  Main Administrative Client
+__________________________________________________________________________
+The following commands are recognized:
+
+SERVSTART 	Start the Submission Server
+SERVSTOP 	Stop the Submission Server
+SERVSTAT 	Display the current status of the Submission Server
+
+PASSGENALL 	Generate NEW passwords for ALL students
+PASSGEN 	Generate NEW passwords for a SINGLE student
+
+CPASSALL 	Clear all passwords for ALL students
+CPASS 		Clear all passwords for a SINGLE student
+
+REPORT 		Create a report for each student in a course and assignment.
+
+Q 		Quit the Admin Client
+HELP 		Display this message
+__________________________________________________________________________
+:[2J[0;0H__________________________________________________________________________
+
+           Submission System  -  Main Administrative Client
+__________________________________________________________________________
+The following commands are recognized:
+
+SERVSTART 	Start the Submission Server
+SERVSTOP 	Stop the Submission Server
+SERVSTAT 	Display the current status of the Submission Server
+
+PASSGENALL 	Generate NEW passwords for ALL students
+PASSGEN 	Generate NEW passwords for a SINGLE student
+
+CPASSALL 	Clear all passwords for ALL students
+CPASS 		Clear all passwords for a SINGLE student
+
+REPORT 		Create a report for each student in a course and assignment.
+
+Q 		Quit the Admin Client
+HELP 		Display this message
+__________________________________________________________________________
+:[2J[0;0H__________________________________________________________________________
+
+           Submission System  -  Main Administrative Client
+__________________________________________________________________________
+The following commands are recognized:
+
+SERVSTART 	Start the Submission Server
+SERVSTOP 	Stop the Submission Server
+SERVSTAT 	Display the current status of the Submission Server
+
+PASSGENALL 	Generate NEW passwords for ALL students
+PASSGEN 	Generate NEW passwords for a SINGLE student
+
+CPASSALL 	Clear all passwords for ALL students
+CPASS 		Clear all passwords for a SINGLE student
+
+REPORT 		Create a report for each student in a course and assignment.
+
+Q 		Quit the Admin Client
+HELP 		Display this message
+__________________________________________________________________________
+:

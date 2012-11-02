@@ -1,0 +1,32 @@
+[2J[0;0H__________________________________________________________________________
+
+           Submission System  -  Main Administrative Client
+__________________________________________________________________________
+The following commands are recognized:
+
+SERVSTART 	Start the Submission Server
+SERVSTOP 	Stop the Submission Server
+SERVSTAT 	Display the current status of the Submission Server
+
+PASSGENALL 	Generate NEW passwords for ALL students
+PASSGEN 	Generate NEW passwords for a SINGLE student
+
+CPASSALL 	Clear all passwords for ALL students
+CPASS 		Clear all passwords for a SINGLE student
+
+REPORT 		Create a report for each student in a course and assignment.
+
+Q 		Quit the Admin Client
+HELP 		Display this message
+__________________________________________________________________________
+:New passwords will be generated for all students
+Complete
+:All passwords will be cleard for all students
+Complete
+:Generate new passwords for student:
+Error generating passwords for student oliver
+:Invalid Command, Enter HELP for help
+:Clear all passwords for student:
+Error clearing passwords for student oliver
+:Invalid Command, Enter HELP for help
+:

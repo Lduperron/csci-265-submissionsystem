@@ -1,0 +1,30 @@
+Test-plan
+==========
+
+testbench is a c-shell driver script to test the random password generator.
+
+The script requires three sub-directories in the directory it is located.
+tinp  --> this is the location for the input parameters.
+texp  --> this is the location for the expected output when rndpassword
+          is executed.
+tact  --> this is the location for the actual output when rndpassword was
+          executed.
+          
+For each file located in tinp, testbench will execute rndpassword and pass
+the contents of the file to rndpassword as command line parameters.  A test
+counter will be incremented for every test run.
+
+The output of rndpassword will then be redirected to the tact directory, 
+using the same filename as the file from the tinp directory.
+
+Diff will then be run on the newly created file in tact and a file in the 
+texp directory with the same name.  If there are any differences, the error
+count will be incremented, indicating the mismatch.  The actual output 
+from diff is not saved, but redirected to /dev/null.
+
+When all the files in tinp have be processed, the script will output a 
+summary indicating the number of tests run and the number of errors
+encountered.
+
+The program will then terminate.
+

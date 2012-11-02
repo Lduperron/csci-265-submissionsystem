@@ -1,0 +1,73 @@
+#!/usr/bin/perl
+#***********************************************************************
+# CUSTOM DIFF
+#
+#***********************************************************************
+$| = 1;
+#use warning;
+use strict;
+use IO::File;
+# constants
+my $regexLine1 = ":Server started as process";
+my $regexLine2 = ":Submit Server [RUNNING] a";
+my $help = "Correct format is diff texp/file tact/file\n";
+my $size = @ARGV;
+
+# validate input parameters
+if ($size != 2) {
+	print $size ."\n";
+	print "Incorrect parameter usage\n";
+	die $help;
+}
+my $file1 = shift @ARGV;
+my $file2 = shift @ARGV;
+my @f1Arr;
+my @f2Arr;
+my $lineF1;
+my $lineF2;
+my @diffArr;
+
+if ((substr($file1, 0 , 5) ne "texp/") || (substr($file2, 0 , 5) ne "tact/")) {
+	die $help;
+}
+open (my $fh1, "<", $file1)
+	or die("Unable to open file $file1\n");
+open (my $f2, "<", $file2)
+	or die("Unable to open file $file2\n");	
+
+while ($lineF1 = <$fh1>) {
+	unless ($lineF2 = <$f2>) {
+		push (@diffArr, $lineF1);		# if there are more lines in F1 than F2
+	} else {
+	my $value = "";
+
+	if ($lineF1 ne $lineF2) {
+		if (substr($lineF2,0,26) eq $regexLine1) {	# check if it's the regex lines 
+			$value = substr($lineF2,27);
+		}
+		if (substr($lineF2,0,26) eq $regexLine2) {	# check if it's the regex lines 
+			$value = substr($lineF2,39); 
+		}
+
+		if ($value =~ m/[\d]/) {			
+			if ($value =~ m/[a..z],[A..Z]/) {	# we have an error
+print "value3 $value\n";
+				push (@diffArr, $lineF1);
+				push (@diffArr, $lineF2);
+				push (@diffArr, "--------------vfvf----------------\n");
+			}
+		} else {
+			push (@diffArr, $lineF1);
+			push (@diffArr, $lineF2);
+			push (@diffArr, "-------------------asa------------\n");
+		}
+	} }
+}
+
+# if there are more lines in F2 than F1
+#while ($lineF2 = <$f2>) {
+#	push (@diffArr, $lineF2);
+#}
+print "==========================\n";
+print @diffArr;
+exit;
