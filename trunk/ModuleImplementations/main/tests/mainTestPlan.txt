@@ -1,0 +1,38 @@
+Test-plan
+==========
+
+testbench is a perl driver script to test the adminClient of the Submission system.
+
+The script requires three sub-directories in the directory it is located.
+tinp  --> this is the location for the input parameters.
+texp  --> this is the location for the expected output.
+tact  --> this is the location for the actual output.
+          
+For each file located in tinp, testbench will execute adminClient and pass
+the contents of the file to adminClient as keystroke input.  A test
+counter will be incremented for every test run.
+
+The output of adminClient will then be redirected to the tact directory, 
+using the same filename as the file from the tinp directory.
+
+Diff will then be run on the newly created file in tact and a file in the 
+texp directory with the same name.  If there are any differences, the error
+count will be incremented, indicating the mismatch.  The actual output 
+from diff is not saved, but redirected to /dev/null.
+
+When all the files in tinp have be processed, the script will output a 
+summary indicating the number of tests run and the number of errors
+encountered.
+
+The program will then terminate.
+
+test0 - tests starting & stopping Submit Server
+test1 - tests starting, when the server is started, and stopping, 
+		when the server it stopped. It also tests various permutations
+		of capitals and smalls.
+test2 - tests generating and clearing passwords for all and a single user.
+		sends incorrect and correct information to single user tests to 
+		verify error handling.
+test3 - tests calling password generation and clearing repeatedly
+test4 - tests calling of reporting module
+test5 - tests help command
