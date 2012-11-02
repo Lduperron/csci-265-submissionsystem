@@ -81,10 +81,10 @@ students can submit assignments.
    After this has been completed, automated tests and reports can be generated
    using the report command.
    
-   Adding new students or courses can be accompished simply by appending them to the correct
+   Adding new students or courses can be accomplished simply by appending them to the correct
    files in the config file and starting the adminclient, which will automatically build the
    folders for them.  Passwords must be generated one by one for new students, however, to avoid
-   invalidiating passwords for previouslly existing students.
+   invalidating passwords for previously existing students.
 
 ==================================================
 4.  AVAILABLE COMMANDS
@@ -110,8 +110,6 @@ REPORT:  Generates a report on a specific student's
 QUIT:  Exits the adminclient.  If started, the server
        is independent and not effected by exiting.
 
-EXIT:  Same as quit.
-
 HELP:  Prints out a help menu inside adminclient
 
 ==================================================
@@ -126,7 +124,7 @@ HELP:  Prints out a help menu inside adminclient
    Error:  Students get "Error: Unable to connect to the submission server"
    when attempting to submit files
    Solution:  Verify that you have correctly set the port/Peer Address in the
-   userclient before distrubiting, or have instructed students on the correct values.
+   userclient before distributing, or have instructed students on the correct values.
       
    Error:  Students get invalid username/password when submitting
    Solution:  Ensure students are reading passwords from top to bottom and are crossing out
@@ -141,9 +139,9 @@ HELP:  Prints out a help menu inside adminclient
 6.  APPENDIX
 ==================================================
 This system produced by:
+     Evan Seabrook
      Lochlin Duperron
-     Oliver Jourmel
      Marius Loots
      Matthew Cormons
      Meara Kimball
-     Evan Seabrook 
+     Oliver Jourmel 
