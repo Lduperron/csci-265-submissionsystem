@@ -73,84 +73,82 @@ my $passNumber;
    my $docsPath = $root . "docs/";
 
 # Define config filenames
-   my $studentsConf = $configPath . "StudentConfig.txt";	# studentname:enrolled_course:...\n
-   my $coursesConf = $configPath . "CourseConfig.txt";		# coursename\n
-   my $passwordConf = $configPath . "PasswordConfig.txt";	# Length:<LENGTH>\n Type:<[alnum,num]>\n Number:<Number>
+   my $studentsConf = $configPath . "StudentConfig.txt";   # studentname:enrolled_course:...\n
+   my $coursesConf = $configPath . "CourseConfig.txt";      # coursename\n
+   my $passwordConf = $configPath . "PasswordConfig.txt";   # Length:<LENGTH>\n Type:<[alnum,num]>\n Number:<Number>
 
 # Define default settings for make_path
-   my $verbose = 0;		# 1 = print name of dir when created, 0 = do not print dir
-   my $mode = "0777";		# TODO: what does this mean? - user full, group read, everyone read?
+   my $verbose = 0;      # 1 = print name of dir when created, 0 = do not print dir
    my %mpOptions = ("verbose",$verbose);
-   #print {%mpOptions};
 # read Courses Config file
    open(my $courses, "<", $coursesConf)
-	or die("Unable to open file ". $coursesConf);
+   or die("Unable to open file ". $coursesConf);
 
 # create course and assignment directories
    while (<$courses>) {
-	   my $course = $_;
-	   chomp($course);
-	   make_path($coursesPath.$course, {%mpOptions});
+      my $course = $_;
+      chomp($course);
+      make_path($coursesPath.$course, {%mpOptions});
 
-	# read assignments file for current course
-	   open(my $assignments, "<", $assignmentsPath.$course.".txt")
-		   or die("Unable to open file ". $assignmentsPath.$course .".txt");
+   # read assignments file for current course
+      open(my $assignments, "<", $assignmentsPath.$course.".txt")
+         or die("Unable to open file ". $assignmentsPath.$course .".txt");
 
-	# create assignments, tinp, and texp directories
-	   while (<$assignments>) {
-		   my @assignment = split(':', $_);
-		   my $assignment = shift(@assignment);
-		   make_path($coursesPath.$course."/".$assignment."/tinp", {%mpOptions});
-		   make_path($coursesPath.$course."/".$assignment."/texp", {%mpOptions});
-	   }
+   # create assignments, tinp, and texp directories
+      while (<$assignments>) {
+         my @assignment = split(':', $_);
+         my $assignment = shift(@assignment);
+         make_path($coursesPath.$course."/".$assignment."/tinp", {%mpOptions});
+         make_path($coursesPath.$course."/".$assignment."/texp", {%mpOptions});
+      }
    }
 
 # read students config file
    open(my $students, "<", $studentsConf)
-	   or die("Unable to open file ". $studentsConf);
+      or die("Unable to open file ". $studentsConf);
 
 # create student directories under students and under assignments
    while (<$students>) {
-	   my @student = split(':', $_);
-	   my $student = shift(@student);
-	   chomp($student);
+      my @student = split(':', $_);
+      my $student = shift(@student);
+      chomp($student);
 
-	# process enrolled courses and create relevant student directories	
-	   while (my $course = shift(@student)) {
-		   chomp($course);
-		# read assignments file of current course
-		   open(my $assignments, $assignmentsPath.$course.".txt")
-			   or die("Unable to open file ". $assignmentsPath.$course.".txt");
+   # process enrolled courses and create relevant student directories   
+      while (my $course = shift(@student)) {
+         chomp($course);
+      # read assignments file of current course
+         open(my $assignments, $assignmentsPath.$course.".txt")
+            or die("Unable to open file ". $assignmentsPath.$course.".txt");
 
-		# create student and tact directories under assignments
-		   while (<$assignments>) {
-			   my @assignment = split(':', $_);
-			   my $assignment = shift(@assignment);
-			   make_path($coursesPath.$course."/".$assignment."/".$student."/tact", {%mpOptions});
-		   }
-	   }
+      # create student and tact directories under assignments
+         while (<$assignments>) {
+            my @assignment = split(':', $_);
+            my $assignment = shift(@assignment);
+            make_path($coursesPath.$course."/".$assignment."/".$student."/tact", {%mpOptions});
+         }
+      }
    }
 # create the folder for storing student passwords
    make_path($studentsPath, {%mpOptions});
 
 # load Password defaults from config
    open(my $parameters, $passwordConf)
-	   or die("Unable to open file ". $passwordConf);
+      or die("Unable to open file ". $passwordConf);
 
    while (<$parameters>) {
-	   my @parameter = split(':',$_);
-	   if ($parameter[0] eq "Length") {
-		   $passLength = $parameter[1];
+      my @parameter = split(':',$_);
+      if ($parameter[0] eq "Length") {
+         $passLength = $parameter[1];
        chomp($passLength);
-	   } elsif ($parameter[0] eq "Type") {
-		   $passType = $parameter[1];
+      } elsif ($parameter[0] eq "Type") {
+         $passType = $parameter[1];
        chomp($passType);
-	   } elsif ($parameter[0] eq "Number") {
-		   $passNumber = $parameter[1];
+      } elsif ($parameter[0] eq "Number") {
+         $passNumber = $parameter[1];
        chomp($passNumber);
-	   } else {
-		   die("Errors in $passwordConf file");
-	   }
+      } else {
+         die("Errors in $passwordConf file");
+      }
    }
 #}
 #-------------------------------------------------------------------
@@ -214,99 +212,99 @@ my $passNumber;
 
 #------Helper Methods--------------------------------------------------
 #----------------------------------------------------------------------
-#		Server
-#		Start, Stop and show status of Submit Server
+#      Server
+#      Start, Stop and show status of Submit Server
 #----------------------------------------------------------------------
 sub Server
 {
 # Define Submit Server defaults
-	my $submitSvrName = "SubmitServer";
-	my $svrPidFileName = "SubmitServer.pid";
-	my $startSvrCmd = $root . "bin/Mod/$submitSvrName &";
-	my $getPidCmd = "pgrep " . $submitSvrName . " > ";
-	my $showSvrPidCmd = "cat ". $svrPidFileName;
+   my $submitSvrName = "SubmitServer";
+   my $svrPidFileName = "SubmitServer.pid";
+   my $startSvrCmd = $root . "bin/Mod/$submitSvrName &";
+   my $getPidCmd = "pgrep " . $submitSvrName . " > ";
+   my $showSvrPidCmd = "cat ". $svrPidFileName;
 
    my $arg = shift;
 
    if($arg eq "start"){
-   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
-   	# if the server is running
-			print "Server is already running\n";
-			return 1;
-		}
-
-		# fork the process so that we can start the server in the background
-		my $pid = fork();#
-
-		if (not defined $pid) {
-			print "Unable to start Submit Server. No resources available.\n";
-			return 1;
-		} elsif ($pid == 0) { # code to be executed by the child fork
-			# get the process id of Submit Server
-			system($getPidCmd . $svrPidFileName);
-			exit(0);
-		} else { # code to be executed by the parent fork
-			# start Submit Server in background
-			system($startSvrCmd);
-			waitpid($pid,0)
+      if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {   
+      # if the server is running
+         print "Server is already running\n";
+         return 1;
       }
 
-   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {
-   	# if the server is running
-			print "Server started as process ";
-			system($showSvrPidCmd);
-		} else {
-			print "Server failed to start\n";
-		}
-		return 1;
-				
-   }elsif($arg eq "stop"){
-		my @pid;
-		# check if server not already running
-   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {
-   	# if the server is running
-			open(my $svrFile, "<", $svrPidFileName)
-				or die("Unable to verify if Submit Server is running.  Please contact support\n"); 
+      # fork the process so that we can start the server in the background
+      my $pid = fork();#
 
-			@pid = <$svrFile>;
+      if (not defined $pid) {
+         print "Unable to start Submit Server. No resources available.\n";
+         return 1;
+      } elsif ($pid == 0) { # code to be executed by the child fork
+         # get the process id of Submit Server
+         system($getPidCmd . $svrPidFileName);
+         exit(0);
+      } else { # code to be executed by the parent fork
+         # start Submit Server in background
+         system($startSvrCmd);
+         waitpid($pid,0)
+      }
+
+      if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {
+      # if the server is running
+         print "Server started as process ";
+         system($showSvrPidCmd);
+      } else {
+         print "Server failed to start\n";
+      }
+      return 1;
+            
+   }elsif($arg eq "stop"){
+      my @pid;
+      # check if server not already running
+      if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {
+      # if the server is running
+         open(my $svrFile, "<", $svrPidFileName)
+            or die("Unable to verify if Submit Server is running.  Please contact support\n"); 
+
+         @pid = <$svrFile>;
          
 
-			chomp(@pid);
-			close($svrPidFileName);
-			
-			kill('TERM', @pid);				# try to stop it using TERM first - it's cleaner
-			unlink($svrPidFileName);		# get rid of the server pid file    
-			sleep(1);							# wait 1 secs to see if it terminates
-		} else {
-			print "Submit Server is not running\n"; 
-			return 1; 
-		}	
+         chomp(@pid);
+         close($svrPidFileName);
+         
+         kill('TERM', @pid);            # try to stop it using TERM first - it's cleaner
+         unlink($svrPidFileName);      # get rid of the server pid file    
+         sleep(1);                     # wait 1 secs to see if it terminates
+      } else {
+         print "Submit Server is not running\n"; 
+         return 1; 
+      }   
 
-		# check if kill worked
-		if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
-		# if the server is running
-			kill('KILL', @pid);					# kill it - forcefully
-		}
+      # check if kill worked
+      if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {   
+      # if the server is running
+         kill('KILL', @pid);               # kill it - forcefully
+      }
       # tripple check the server...
-		if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {	
-		# if the server is running, and did not TERM, or KILL
-			print "Error stoping server\n";
+      if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {   
+      # if the server is running, and did not TERM, or KILL
+         print "Error stoping server\n";
          return 0;
-		}
-		unlink($svrPidFileName);			# get rid of the server pid file    
-		print "Submit Server stopped\n";
-		return 1;
-		
+      }
+      unlink($svrPidFileName);         # get rid of the server pid file    
+      print "Submit Server stopped\n";
+      return 1;
+      
    }elsif($arg eq "stat"){
-   	# get Submit Server Status
-   	if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {
-		# if the server is running
-			print "Submit Server [RUNNING] at process id ";
-			system($showSvrPidCmd);
-		} else {
-			print "Submit Server [STOPPED]\n";
-		}
-		return 1;
+      # get Submit Server Status
+      if (my $status = &getSvrStatus($submitSvrName, $svrPidFileName, $getPidCmd)) {
+      # if the server is running
+         print "Submit Server [RUNNING] at process id ";
+         system($showSvrPidCmd);
+      } else {
+         print "Submit Server [STOPPED]\n";
+      }
+      return 1;
 
    }else{
       return -1;
@@ -314,36 +312,36 @@ sub Server
    return 1;
 }
 #----------------------------------------------------------------------
-#		getSvrStatus
-#		return 1 if server is running, else 0
+#      getSvrStatus
+#      return 1 if server is running, else 0
 #----------------------------------------------------------------------
 sub getSvrStatus {
-	my $chkPidFileName = "check.pid";
-	my $submitSvrName = $_[0];
-	my $svrPidFileName =  $_[1];
-	my $getPidCmd =  $_[2];
+   my $chkPidFileName = "check.pid";
+   my $submitSvrName = $_[0];
+   my $svrPidFileName =  $_[1];
+   my $getPidCmd =  $_[2];
    my $MV = "mv"; # system command for moving a file.
 
 # put the running server pid into a check file
-	my $args = join('',$getPidCmd,$chkPidFileName);
-	system($args);
+   my $args = join('',$getPidCmd,$chkPidFileName);
+   system($args);
    
-	if (-e $chkPidFileName) {				# if the file was created
-		if (-z $chkPidFileName) {			# but its empty - there's no server
-			if (-e $svrPidFileName) {		# if the server pid file exists
-				unlink ($svrPidFileName);	# delete it - there's no server
-				unlink($chkPidFileName);	# get rid of temp file
-				return 0;
-			}
-		} else {		# the check file is not empty
-			# we have a server running!
-			system("$MV $chkPidFileName $svrPidFileName");	# rename the file, 
-											# will clobber existing svr file
-			return 1;
-		}
-	}
+   if (-e $chkPidFileName) {            # if the file was created
+      if (-z $chkPidFileName) {         # but its empty - there's no server
+         if (-e $svrPidFileName) {      # if the server pid file exists
+            unlink ($svrPidFileName);   # delete it - there's no server
+            unlink($chkPidFileName);   # get rid of temp file
+            return 0;
+         }
+      } else {      # the check file is not empty
+         # we have a server running!
+         system("$MV $chkPidFileName $svrPidFileName");   # rename the file, 
+                                 # will clobber existing svr file
+         return 1;
+      }
+   }
    unlink($chkPidFileName); # get rid of tmp file
-	return 0;		# no server found
+   return 0;      # no server found
 }
 
  
@@ -359,13 +357,13 @@ sub Pass
    $pass->setSetting("number",$passNumber);
 
    open(my $students, "<", $studentsConf)
-	   or die("Unable to open file ". $studentsConf);
+      or die("Unable to open file ". $studentsConf);
 
    if($sName eq "all"){
       while (<$students>) {
-	      my @student = split(':', $_);
-	     $sName = shift(@student);
-	      chomp($sName);
+         my @student = split(':', $_);
+        $sName = shift(@student);
+         chomp($sName);
          if($pass->generate($sName)){
          }else{
             print "Error generating passwords for student $sName\n";
@@ -375,9 +373,9 @@ sub Pass
       return 1;
    }else{
       while (<$students>) {
-	      my @student = split(':', $_);
-	      my $tmpStudent = shift(@student);
-	      chomp($tmpStudent);
+         my @student = split(':', $_);
+         my $tmpStudent = shift(@student);
+         chomp($tmpStudent);
          if($sName eq $tmpStudent){
             $pass->generate($sName);
             print "Complete\n";
@@ -401,13 +399,13 @@ sub clearPass
    $pass->setSetting("number",0);
 
    open(my $students, "<", $studentsConf)
-	   or die("Unable to open file ". $studentsConf);
+      or die("Unable to open file ". $studentsConf);
 
    if($sName eq "all"){
       while (<$students>) {
-	      my @student = split(':', $_);
-	     $sName = shift(@student);
-	      chomp($sName);
+         my @student = split(':', $_);
+        $sName = shift(@student);
+         chomp($sName);
          if($pass->generate($sName)){
 
          }else{
@@ -418,9 +416,9 @@ sub clearPass
       return 1;
    }else{
       while (<$students>) {
-	      my @student = split(':', $_);
-	      my $tmpStudent = shift(@student);
-	      chomp($tmpStudent);
+         my @student = split(':', $_);
+         my $tmpStudent = shift(@student);
+         chomp($tmpStudent);
          if($sName eq $tmpStudent){
             $pass->generate($sName);
             print "Complete\n";
@@ -465,27 +463,27 @@ sub Report
    chomp($aReq);
    
    open(my $courses, "<", $coursesConf)
-	or die("Unable to open file ". $coursesConf);
+   or die("Unable to open file ". $coursesConf);
 
 # validate course and assignment
    while (<$courses>) {
-	   my $course = $_;
+      my $course = $_;
       chomp($course);
-	   if ($course eq $cReq){
+      if ($course eq $cReq){
          $cValid=1;
-	   # read assignments file for current course
-	      open(my $assignments, "<", $assignmentsPath.$course.".txt")
-		      or die("Unable to open file ". $assignmentsPath.$course .".txt");
+      # read assignments file for current course
+         open(my $assignments, "<", $assignmentsPath.$course.".txt")
+            or die("Unable to open file ". $assignmentsPath.$course .".txt");
 
-	      while (<$assignments>) {
-		      my @assignment = split(':', $_);
-		      my $assignment = shift(@assignment);
+         while (<$assignments>) {
+            my @assignment = split(':', $_);
+            my $assignment = shift(@assignment);
             chomp($assignment);
-		      if($assignment eq $aReq){
+            if($assignment eq $aReq){
                $testType = pop(@assignment);
                $aValid=1;
             }
-	      }
+         }
       }
    }
 
@@ -493,15 +491,15 @@ sub Report
       if($aValid){
          # read students config file
          open(my $students, "<", $studentsConf)
-	         or die("Unable to open file ". $studentsConf);
+            or die("Unable to open file ". $studentsConf);
 
          while (<$students>) {
-	         my @student = split(':', $_);
-	         my $sName = shift(@student);
-	         chomp($sName);
+            my @student = split(':', $_);
+            my $sName = shift(@student);
+            chomp($sName);
          # in the course...
             while (my $course = shift(@student)) {
-		         chomp($course);
+               chomp($course);
                if($course eq $cReq){
                   system("$root/bin/Mod/report $cReq $aReq $sName");
                   print "A report has been generated in courses/$cReq/$aReq/$sName\n";
@@ -523,8 +521,8 @@ sub Report
 
 sub printHelp
 {
-	print "\033[2J";    		#clear the screen
-	print "\033[0;0H"; 		#jump to 0,0
+   print "\033[2J";          #clear the screen
+   print "\033[0;0H";       #jump to 0,0
 
    print "__________________________________________________________________________\n\n";
    print "           Submission System  -  Main Administrative Client\n";
