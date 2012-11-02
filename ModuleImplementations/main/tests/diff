@@ -51,23 +51,25 @@ while ($lineF1 = <$fh1>) {
 
 		if ($value =~ m/[\d]/) {			
 			if ($value =~ m/[a..z],[A..Z]/) {	# we have an error
-print "value3 $value\n";
 				push (@diffArr, $lineF1);
 				push (@diffArr, $lineF2);
-				push (@diffArr, "--------------vfvf----------------\n");
+				push (@diffArr, "----------------------------------\n");
 			}
 		} else {
 			push (@diffArr, $lineF1);
 			push (@diffArr, $lineF2);
-			push (@diffArr, "-------------------asa------------\n");
+			push (@diffArr, "----------------------------------\n");
 		}
 	} }
 }
 
 # if there are more lines in F2 than F1
-#while ($lineF2 = <$f2>) {
-#	push (@diffArr, $lineF2);
-#}
-print "==========================\n";
-print @diffArr;
-exit;
+while ($lineF2 = <$f2>) {
+	push (@diffArr, $lineF2);
+}
+#print @diffArr;
+if ($diffArr > 0) {
+	return("errors");
+} else {
+	return 0;
+}
