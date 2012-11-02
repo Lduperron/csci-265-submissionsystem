@@ -1,19 +1,122 @@
-Submit Server Interface Specification
+MIS
+-----------------------------------------------------------------------
+SubmitServer.pl
+-----------------------------------------------------------------------
+Normal Behaviour
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+This perl program will not accept any command line arguments
 
-This module receives and processes assignment submissions from students. 
+At start up, this program will create a socket and wait for userClient
+to connect.Recieves first information, <USER>, <PASSWORD> & <COURSE>
 
-This program will receive a user id, password, course number and 
-assignment name from a client via socket connection. First it will go 
-into the student directory to check that user's enrollment. It will pass the 
-user name & password to the password verifier module to be checked. It 
-will then check that user’s enrollment in the course. Next it will 
-verify the assignment name matches one of the course’s assignments. 
-Finally it will check that the server’s current date & time is before
-the assignment’s due date. If any of these checks fail the server will 
-send an error to the client, and close the connection. Otherwise, it 
-will now send the client the all-clear, and wait for the assignment. 
-Once the assignment is received, it will store it in that user’s 
-instance inside the assignment directory. It will pass back to the 
-client whether or not this was succesful. The server then closes the 
-socket and waits for next client connection.
+   -Calls imported function verify from Passmod.pm
+   -Calls own function isEnrolled
+
+Sends go-ahead code, recieves <ASGMNAME>
+
+   -Calls own function validAsgm
+
+Get server's date (submission date).
+   
+   -Calls own function dateTime
+   -Calls own function onTime
+   
+Send second go-ahead, recieves <LENGTH> (# of lines <ASGM> contains) & 
+first line of <ASGM>.
+
+Creates new file in that assignement's user directory, stores submission
+line by line.
+   
+
+isEnrolled(<STUDENT_CONFIG_PATH><COURSE><USER>)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Normal Behaviour
+   Looks in studentConfig.txt (located at <STUDENT_CONFIG_PATH>), finds
+   student, checks that student is in given course. Returns 1.
+Exceptions
+   Student is not in course, returns 0.
+Assumptions
+   Student exists. Shouldn't make it here otherwise, verify() would fail
+   
+validAsgm(<COURSE_CONFIG_PATH><COURSE><ASGMNAME>)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Normal Behaviour
+   Looks in <COURSE>.txt & checks if assignment name is present.
+   Returns 1.
+Exceptions
+   Doesn't find assignment name, returns 0.
+Assumptions
+   Course exists. If isEnrolled passed, should exist.
+   
+dateTime(<YEAR><MONTH><DAY>)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Normal Behaviour
+   Concatenates <YEAR><MONTH><DAY> into single date, formatted as duedate
+   is. Returns <SUBMISSION_DATE>
+Exceptions
+
+Assumptions
+   Given valid date
+   
+onTime(<SUBMISSION_DATE><DUE_DATE>)
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Normal Behaviour
+Exceptions
+Assumptions
+
+Exceptions
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+If any function fails, it will send the corresponding error code to
+serverClient and close the socket.
+
+If it cannot create a new file to store submission, sends relevent error
+code and closes the socket.
+
+If the number of lines it receives does not match <LENGTH>, sends error
+code, closes the socket and unlinks the file created to store submission.
+
+
+Assumptions
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--All values recieved from userClient are properly formatted
+eg.
+   username:password:course
+   filename
+   line1
+   line2
+   ...
+   linen
+
+--File sent by userClient exists
+
+--Perl Module PassMod.pm exists
+
+--CourseConfig.txt will be formatted as follows:
+<COURSE>\n
+
+eg.
+
+course1
+course2
+course3
+
+--/config/courses/<COURSENAME.txt> will be formatted as follows:
+<ASSIGNMENT>:<DUEDATE>\n
+DUEDATE format is YYYYMMDD
+
+eg.
+
+/config/courses/course1.txt
+assignment1:20121101
+assignment2:20121212
+
+--/config/StudentConfig.txt will be formatted as follows
+<STUDENTNAME>:<ENROLLED_COURSE>:<ENROLLED_COURSE><...>\n
+
+eg.
+doejohn:course1:course2
+doejane:course3
 
