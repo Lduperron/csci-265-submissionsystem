@@ -1,0 +1,95 @@
+Submit Server
+------------------------------------------------------------------------
+Test Plan
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+It was decided that Submit Server would be tested using UserClient 
+(which has been previously tested) and by inspection. This is defined as 
+checking that UserClient gets correct responses back for various passed
+values. 
+
+We are not using an automated method because this would require 
+hardcoded values - either creating hardcoded passwords that are not 
+regenerated &changed in file, or creating a new "testing server" which
+handles inputs differently. Either case defeats the purpose, because it
+will not accurately measure Submit Server's performance.
+
+Test Cases
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+perl SubmitServer.pl <user> <password> <course> <asgm>
+
+
+1.    bob <valid password> csci261 Pex1.txt
+      -everything is valid
+      -expected return: "File submit successful."
+                   File created & correct
+
+2.    jeff <password> csci265 Pex2.txt
+      -"jeff" is not a valid student
+      -expected return: "Error: Username/password is not valid."
+   
+3.    joe <invalid password> csci265 Pex1.txt
+      -expected return: "Error: Username/password is not valid."
+      
+4.    joe <valid password> csci111 Pex2.txt
+      -"csci111" is not a valid course
+      -expected return: "Error: Class name is not valid."
+      
+5.    beth <valid password> csci251 Pex1.txt
+      -"beth" is not enrolled in "csci251"
+      -expected return: "Error: Class name is not valid."
+      
+6.    beth <valid password> csci265 Pex1.txt
+      -"csci265" is at end of line in StudentConfig.txt, checking Submit
+      Server's handling of newline character
+      -expected return: "File submit successful."
+                   File created & correct
+      
+7.    bob <valid password> csci265 foo.txt
+      -"foo.txt" is not a "csci265" assignment
+      -expected return: "Error: Filename is not valid."
+
+8.    bob <valid password> csci265 pex1.txt
+      -"pex1.txt" is not a "csci265" assignment
+      -expected return: "Error: Filename is not valid."
+
+9.    joe <valid password> csci261 Pex2.txt
+      -"Pex2.txt" will have due date set at 20110314 (YYYYMMDD)
+      -expected return: "Error: Assignment is late."
+
+10.   joe <invalid password> csci111 Pex1.txt
+      -2 invalid elements, shouldn't get past first
+      -expected return: "Error: Username/password is not valid."
+
+11.   beth <valid password> csci111 foo.txt
+      -2 invalid elements, shouldn't get past first
+      -expected return: "Error: Class name is not valid."
+
+12.   bob <invalid password> csci111 foo.txt
+      -3 invalid elements, shouldn't get past first
+      -expected return: "Error: Username/password is not valid."
+
+13.   jeff <invalid password> csci111 foo.txt
+      -4 invalid elements, shouldn't get past first
+      -expected return: "Error: Username/password is not valid."
+
+14.   joe <valid password> csci251 Pex1.txt
+      -Pex1.txt is empty
+      -expected return: "File submit successful."
+                   File created & correct
+
+15.   beth <valid password> csci260 Pex2.txt
+      -Pex2.txt contains only newline characters
+      -expected return: "File submit successful."
+                   File created & correct
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Note: Unless otherwise specified, any file contains:
+   This is line 1\n
+   On line 2 now\n
+   3 lines in total
+
+
+   
