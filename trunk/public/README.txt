@@ -76,7 +76,9 @@ students can submit assignments.
    ./submit [username] [password] [course] [filename]
    
    Before reports can be generated, the testbench system must be customized for that
-   assignment.  After this has been completed, automated tests and reports can be generated
+   assignment. This includes the creation of a custom make file to run the testbench.
+   More details can be found on this subject in the Report Module Interface Specification.
+   After this has been completed, automated tests and reports can be generated
    using the report command.
    
    Adding new students or courses can be accompished simply by appending them to the correct

@@ -158,7 +158,6 @@ my $passNumber;
    $pass->setSetting("length",$passLength);
    $pass->setSetting("type",$passType);
    $pass->setSetting("number",$passNumber);
-   $pass->setSetting("carboncopy",0);
 
    my $input = "";
    &printHelp();
