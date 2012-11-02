@@ -1,6 +1,8 @@
 Report MIS
 ==================
 
+
+
 Normal behaviour
 -----------------------------------------------------------------------
 
@@ -22,11 +24,20 @@ A diff will then be run to compare that output with the lecturer provided expect
 This will produce a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/errors.txt with the output from diff and
 a courses/<COURSENAME>/<ASSIGNMENTNAME>/<STUDENTNAME>/summary.txt containing the total number of test cases and the total number of 
 test cases that failed.
+-----------------------------------------------------------------------
+
+
+
+Exceptions
+-----------------------------------------------------------------------
+
+-----------------------------------------------------------------------
+
 
 
 Assumptions
 -----------------------------------------------------------------------
------------------------------------------------------------------------
+
  -For module/class submissions, no interactive testing is supported.
  -All referenced files exist and have proper format.
  -All makefiles will maintain absolute references to all files.
@@ -37,8 +48,5 @@ Assumptions
  where program is the binary produced by makefile
  -Files in tinp will have a numeric filename and a .txt file extension, with the first test 
  starting at 0.txt, and the next one would be 1.txt (etc.)
- 
- 
-Exceptions
 -----------------------------------------------------------------------
------------------------------------------------------------------------
+ 
