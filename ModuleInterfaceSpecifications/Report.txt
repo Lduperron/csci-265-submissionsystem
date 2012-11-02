@@ -1,7 +1,5 @@
 Report MIS
 ==================
-IMPORTANT: All changes in current working directory. Successive line (after a new line character) will revert back to the current 
-working directory of the parent process or system call, i.e. bin. We are using full path names to work around this.
 
 Normal behaviour
 -----------------------------------------------------------------------
@@ -39,3 +37,8 @@ Assumptions
  where program is the binary produced by makefile
  -Files in tinp will have a numeric filename and a .txt file extension, with the first test 
  starting at 0.txt, and the next one would be 1.txt (etc.)
+ 
+ 
+Exceptions
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
