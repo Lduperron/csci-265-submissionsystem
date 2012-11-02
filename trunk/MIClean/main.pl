@@ -78,7 +78,7 @@ my $passNumber;
    my $passwordConf = $configPath . "PasswordConfig.txt";	# Length:<LENGTH>\n Type:<[alnum,num]>\n Number:<Number>
 
 # Define default settings for make_path
-   my $verbose = 1;		# 1 = print name of dir when created, 0 = do not print dir
+   my $verbose = 0;		# 1 = print name of dir when created, 0 = do not print dir
    my $mode = "0777";		# TODO: what does this mean? - user full, group read, everyone read?
    my %mpOptions = ("verbose",$verbose);
    #print {%mpOptions};
@@ -141,10 +141,13 @@ my $passNumber;
 	   my @parameter = split(':',$_);
 	   if ($parameter[0] eq "Length") {
 		   $passLength = $parameter[1];
+         chomp($passLength);
 	   } elsif ($parameter[0] eq "Type") {
 		   $passType = $parameter[1];
+         chomp($passType);
 	   } elsif ($parameter[0] eq "Number") {
 		   $passNumber = $parameter[1];
+         chomp($passNumber);
 	   } else {
 		   die("Errors in $passwordConf file");
 	   }
