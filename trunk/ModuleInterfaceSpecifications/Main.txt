@@ -37,8 +37,7 @@ main.pl will be an INTERACTIVE program providing the user will the following com
    ClearPasswordALL
    ClearPassword(<STUDENT_NAME>)
 
-   ReportSimple(<COURSE><ASSIGNMENT>)
-   ReportDetails(<COURSE><ASSIGNMENT><STUDENT_NAME>)
+   Report(<COURSE><ASSIGNMENT>)
 
 
 Each command will refer to a subroutine within main.pl
@@ -129,44 +128,20 @@ ClearPassword(<STUDENT_NAME>)
       Perl Module PassMod.pm exists
 
 
-ReportSimple(<COURSE><ASSIGNMENT>)
+Report(<COURSE><ASSIGNMENT>)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
    Normal Behavior
       Generate a summary.txt file with the results of the (COURSE),(ASSIGNMENT) tests
          and an errors.txt file for all students in (COURSE) with details of the tests
-      Displays that summary.txt file
+      Displays a path to the reports generated
    Exceptions
-   	  Course or Assignment does not exist.
    	  Unable to create summary.txt or errors.txt.
    Assumptions
       (COURSE) and (ASSIGNMENTS) are defined in
          config/CourseConfig.txt
       and
          config/(COURSE_NAME)/(COURSE_NAME).txt
-
-   
-
-
-ReportDetails(<COURSE><ASSIGNMENT><STUDENT_NAME>)
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Normal Behavior
-      Generate an summary.txt file with the results of the (COURSE),(ASSIGNMENT) tests
-         and an errors.txt file for all students in (COURSE) with details of the tests
-      Displays the errors.txt file for (STUDENT_NAME)
-
-   Exceptions
-   	  Course, Assignment, or Student does not exist.
-   	  Unable to create summary.txt or errors.txt.
-   Assumptions
-      (COURSE) and (ASSIGNMENTS) are defined in
-         config/CourseConfig.txt
-      and
-         config/(COURSE_NAME)/(COURSE_NAME).txt
-
-      (STUDENT_NAME) is enrolled in (COURSE)
-   
-
 
 
 Exceptions
@@ -193,9 +168,6 @@ eg. all student files will be .pl and will be tested via "perl *.pl"
    make
 
 
---User will NOT modify any files, or folders within the core program directories
-   (/config/* files are exempt)
-
 --User will modify any configurations by editing the /config/* files
 
 --CourseConfig.txt will be formatted as follows:
@@ -210,7 +182,6 @@ course3
 --/config/courses/<COURSENAME.txt> will be formatted as follows:
 <ASSIGNMENT>:<DUEDATE>\n
 DUEDATE format is YYYYMMDD
-or should we make this YYYY:MM:DD so that we can split it as well
 
 eg.
 
@@ -236,5 +207,5 @@ Type:alnum
 Number:25
 
 If any of these assumptions are violated, the program will terminate.
-   A backup of DEFAULT configs will be supplied in .config/backups
+
 
