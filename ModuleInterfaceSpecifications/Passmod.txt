@@ -1,0 +1,31 @@
+Module Interface - Passmod (Formally Passgen / Passverify)
+
+The passgen and verification module (named Passmod.pm, for PASSword MODule) will handle password generation and password authentication.  The module will support no user input, but will preform disk I/O.   Standard operation is it takes a username from another module and generates a list of passwords, and can take a username and a password and return true or false if it is a valid username / password pair.  As soon as a password is returned true it is invalidated.    The module has defaults that will be printed to the screen in a subroutine and will also provide methods to edit these defaults for the session, such as number of passwords or password complexity.  The module will maintain its own directory structure containing the users and passwords it has created.   
+
+Public methods:
+-	generate(name)  Attempts to create a folder with the given name inside of the base folder, and then create a file with the name '<name>passwordSheet.txt' inside of that directory with a list of one-time passwords.  Immediately invalidates any existing passwords for the provided name if a password file already exists.
+-	verify(name, password)  Returns true or false, checking against the top password in the file with the name name.  If true, password is immediately invalidated and deleted from the file.  
+-	printSettings()  Prints current password generation settings to standard out
+-	getSetting(setting) - Returns a string containing the value of the associated setting.
+-	setSetting(setting, value)  Modifies a setting to a new value.  Preforms no checking on provided value.
+
+Settings:
+	length (int)
+	type (string, alphanum or num)
+	number (number of passwords in a password sheet)
+   carboncopy (bool) - Sends an identical copy of the password sheet to the PATH/Passwords/ folder.  These password sheets are not maintained past production, used for easy printing of multiple passwords.
+	
+Defaults:
+   Directory Path:  ../Students/
+   Length:  8
+   Type:    num
+   Number:  20
+   carboncopy:    true
+   
+Dependancies:  
+   g++, make, Perl 5.0 < with default utilities
+
+Normal Behavior:
+
+   generate(dude)
+   output:  ../Students/dude/dudepasswordSheet.txt
