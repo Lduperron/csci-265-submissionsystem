@@ -92,6 +92,8 @@ eg.
 
 --File sent by userClient exists
 
+--Assumes file is in ASCII characters, not compiled code
+
 --Perl Module PassMod.pm exists
 
 --CourseConfig.txt will be formatted as follows:
