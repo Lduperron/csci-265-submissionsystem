@@ -1,0 +1,20 @@
+#!/bin/csh
+@ test_count="0"
+@ error_count="0"
+
+foreach file (tinp/*)
+	@ test_count = $test_count + 1;
+# exec passClient	
+	set cmd="../adminClient < tinp/$file:t > tact/$file:t" 
+	eval $cmd
+# exec diff to verify results	
+	set cmd="./diff texp/$file:t tact/$file:t"
+	eval $cmd > /dev/null
+
+	if ($status != 0) then
+		@ error_count = $error_count + 1
+	endif
+end
+
+echo "Tests:  $test_count"
+echo "Errors: $error_count"
