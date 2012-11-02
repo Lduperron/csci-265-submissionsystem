@@ -1,6 +1,8 @@
  # In Perl there is no special 'class' definition.  A namespace is a class.
   package Passmod;
 
+  my $moduledirectory;
+
 BEGIN  # Finds the position of the module.
 {      # Assumes that Session-Token-0.82 is in the same folder.
    use File::Basename;
@@ -17,7 +19,7 @@ BEGIN  # Finds the position of the module.
    }
 }
 
-
+  
   use lib "$moduledirectory";
   use lib "$moduledirectory/Session-Token-0.82/lib";
   use lib "$moduledirectory/Session-Token-0.82/blib/arch";
@@ -25,11 +27,11 @@ BEGIN  # Finds the position of the module.
   use Session::Token;
   use strict;
   use warnings;
-  
-  use constant PATH => "../students/";
+
   use Tie::File;
   
- 
+  my $StudentsPath = $moduledirectory."/../../students/";
+   
   our $VERSION = "1.00";
 
   sub new
@@ -41,26 +43,25 @@ BEGIN  # Finds the position of the module.
       $self->{type} = "num";
       $self->{length} = 8;
       $self->{number} = 20;
-      $self->{carboncopy} = 1;
       
       $self->reinitializeGenerator();
      
-      if(!-d PATH)  # Makes sure the directory of where our passwords are going to be is valid
+      if(!-d $StudentsPath)  # Makes sure the directory of where our passwords are going to be is valid
       { 
-         #return 0;
-         system("mkdir ".PATH);
+         return 0;
+         #system("mkdir ".$StudentsPath);
       }
       else
       {
-         system("touch ".PATH."testfile");
+         system("touch ".$StudentsPath."testfile");
          
-         if(!-e PATH."testfile")
+         if(!-e $StudentsPath."testfile")
          {
             die("No write access to students folder!");
          }
          else
          {
-            system("rm -f ".PATH."testfile");
+            system("rm -f ".$StudentsPath."testfile");
          }
       }
 
@@ -79,13 +80,12 @@ BEGIN  # Finds the position of the module.
     {
         $target = shift;
         
-      if(!-d PATH.$target)  # Makes sure the directory of where our passwords are going to be is valid
+      if(!-d $StudentsPath)  # Makes sure the directory of where our passwords are going to be is valid
       { 
          return 0;
-         #system("mkdir ".PATH.$target);
       }
       
-      open($passfile , ">".PATH."$target/$target"."passwordSheet.txt");
+      open($passfile , ">".$StudentsPath."$target"."passwordSheet.txt");
       
       for(my $i = 0; $i < $self->{number}; $i++)
       {
@@ -93,20 +93,7 @@ BEGIN  # Finds the position of the module.
          print $passfile "\n";
       }
       close $passfile;
-      
-      if($self->{carboncopy})
-      {
-         if(!-d PATH."Passwords/")  # Makes sure the directory of where our passwords are going to be is valid
-         { 
-            system("mkdir ".PATH."Passwords/");
-         }
-         
-         my $originalpath = PATH."$target/$target"."passwordSheet.txt";
-         my $copypath = PATH."Passwords/$target"."passwordSheet.txt";
-         system("cp $originalpath $copypath");
-         
-      }
-        
+              
      return 1;
      
      
@@ -130,11 +117,16 @@ BEGIN  # Finds the position of the module.
    my $realpass;
    my @temparray;
    
-   if(-e PATH."$name/$name"."passwordSheet.txt")
+   if(-e $StudentsPath."$name"."passwordSheet.txt")
    {
    
-      tie @temparray, 'Tie::File', PATH."$name/$name"."passwordSheet.txt" or die;
+      tie @temparray, 'Tie::File', $StudentsPath."$name"."passwordSheet.txt" or die;
       
+	  if(!defined($temparray[0]))
+	  {
+		return 0; # No passwords left =<
+	  }
+	  
       $realpass = $temparray[0];
       
       if($realpass eq $givenpass)
@@ -155,8 +147,8 @@ BEGIN  # Finds the position of the module.
     my $self = shift;
  
     printf "Current Password Type: %s \n" , ($self->{type} eq "num") ? "Numeric Only" : "Alphanumeric";
-    printf "Current Password Length: %s \n " , $self->{length};
-    print "Current Number of Passwords per File: %s \n" , $self->{number};
+    printf "Current Password Length: %s \n" , $self->{length};
+    printf "Current Number of Passwords per File: %s \n" , $self->{number};
  
   }
  
@@ -183,12 +175,7 @@ BEGIN  # Finds the position of the module.
          {
             return $self->{number}
          }
-         
-         if($setting eq "carboncopy")
-         {
-            return $self->{carboncopy}
-         }
-      
+
       }
   }
   
@@ -219,12 +206,7 @@ BEGIN  # Finds the position of the module.
          {
             $self->{number} = $newValue;
          }
-         
-                  
-         if($setting eq "carboncopy")
-         {
-            $self->{carboncopy} = $newValue;
-         }
+
       
       }
   }
