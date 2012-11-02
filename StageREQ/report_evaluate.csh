@@ -21,7 +21,8 @@ set numOfCases = `ls -l $courseDir/tinp | wc -l`
 set coursecounter = 0;
 while($coursecounter < $numOfCases)
    foreach line(cat ./$courseDir/tinp/$coursecounter.txt)
-      ./$courseDir/tinp/$line >> ./$courseDir/$3/tact/$coursecounter.txt
+      set line = ./$courseDir/$3/$line
+      ./$line >> ./$courseDir/$3/tact/$coursecounter.txt
          
      if({ diff -f ./$courseDir/texp/$coursecounter.txt ./$courseDir/$3/tact/$coursecounter.txt } != 0) then
          @ errorCount++
