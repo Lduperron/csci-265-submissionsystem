@@ -1,0 +1,44 @@
+Review of User Client
+-----------------------------------------------------------------------
+Nov 1, 2012       5:10pm
+
+Present:
+*  Matthew Cormons
+*	Oliver Jourmel
+*	Meara Kimball
+*	Marius Loots
+
+
+Absent:
+*	Lochlin Duperron
+*	Evan Seabrook
+
+Presented by Marius Loots
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ML    What is function of "open(INFILE, @ARGV)"?
+         -Found it unnecessary, remove
+
+OJ    Uses exit(0) when closing due to an error
+         -switch error exits to exit(1), system expects that a exit(0)
+          was good
+
+ML    ARGV checks are overly complicated
+         -if time allows, possibly just check for correct number of argv
+          elements, otherwise print out an example of a correct program
+          call (perl UserClient.pl <user> <password> <course> <file>)
+
+OJ    At storing the file in the array, explicitly comment why loop
+      starts at 3.
+
+ML    Attach specific error checks to corresponding point in program
+      where those errors would be recieved
+         -invalid user/passw and invalid class after sending 
+          user:password:course
+         -invalid asgm after sending assignment name
+         -Keep file submission success/failure check where it is after
+          sending the file.
+
+      More commenting in general
+        
