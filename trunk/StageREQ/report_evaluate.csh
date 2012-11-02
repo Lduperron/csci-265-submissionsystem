@@ -14,7 +14,6 @@ rm $courseDir/$3/errors.txt
 rm $courseDir/$3/summary.txt 
 cp $courseDir/makefile $courseDir/$3/makefile
 make -f $courseDir/$3/makefile
-make clean -f $courseDir/$3/makefile
 
 set numOfCases = `ls -l $courseDir/tinp | wc -l`
 @ numOfCases-- 
