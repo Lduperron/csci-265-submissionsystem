@@ -1,4 +1,4 @@
-   #!/usr/bin/perl
+#!/usr/bin/perl
 
 $| = 1;
 
@@ -180,12 +180,11 @@ sub validAsgm # assignment path, assignment name
 
         # looks for assignment
         while (<$assignments>) {
-      my @assignment = split(":", $_);
-      my $assignment = shift(@assignment);
-      if ( ($assignment) eq $asgm) {
-         return 1;
-      }
-      print "$assignment\n";
+           my @assignment = split(":", $_);
+           my $assignment = shift(@assignment);
+           if ( ($assignment) eq $asgm) {
+              return 1;
+           }
         }
         return 0;
 
