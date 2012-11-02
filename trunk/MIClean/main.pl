@@ -141,13 +141,13 @@ my $passNumber;
 	   my @parameter = split(':',$_);
 	   if ($parameter[0] eq "Length") {
 		   $passLength = $parameter[1];
-         chomp($passLength);
+       chomp($passLength);
 	   } elsif ($parameter[0] eq "Type") {
 		   $passType = $parameter[1];
-         chomp($passType);
+       chomp($passType);
 	   } elsif ($parameter[0] eq "Number") {
 		   $passNumber = $parameter[1];
-         chomp($passNumber);
+       chomp($passNumber);
 	   } else {
 		   die("Errors in $passwordConf file");
 	   }
@@ -275,7 +275,7 @@ sub Server
 			close($svrPidFileName);
 			
 			kill('TERM', @pid);				# try to stop it using TERM first - it's cleaner
-			unlink($svrPidFileName);		# get rid of the server pid file    
+			unlink($svrPidFileName);		# get rid of the server pid file    
 			sleep(1);							# wait 1 secs to see if it terminates
 		} else {
 			print "Submit Server is not running\n"; 
@@ -293,7 +293,7 @@ sub Server
 			print "Error stoping server\n";
          return 0;
 		}
-		unlink($svrPidFileName);			# get rid of the server pid file    
+		unlink($svrPidFileName);			# get rid of the server pid file    
 		print "Submit Server stopped\n";
 		return 1;
 		
