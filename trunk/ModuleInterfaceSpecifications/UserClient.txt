@@ -1,12 +1,13 @@
 MIS
 _______________________________________________________________________________
-UserClient.pl
+UserClient.pl (Single program with no modules)
 _______________________________________________________________________________
 Normal Behaviour
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-This program will accept command line arguments.  This is the only way in which
-to input data into this program.  These command line arguments, of which there 
+This program will connect to a server.  It will then accept command line 
+arguments.  This is the only way in which to input data into this program.  
+These command line arguments, of which there 
 must be 4, must be provided in the following order: 
     1) User name
 
@@ -16,88 +17,56 @@ must be 4, must be provided in the following order:
 
     4) Filename
 
-These command line arguments are taken into the program using the @ARGV array.
-The following conditional statements are then evaluated:
-    If (scalar(@ARGV) == 0)
-        Error: No username, password, class name, or file name submitted.\n is 
-        printed to STDOUT and the program exits with a value of 0 since no file
-        was submitted
-    Elsif (scalar(@ARGV) == 1)
-        Error: No password, class name, or file name submitted.\n is printed to 
-        STDOUT and the program exits with a value of 0 since no file was submitted
-    Elsif (scalar(@ARGV) == 2)
-        Error: No class name or file name submitted.\n is printed to STDOUT and 
-        the program exits with a value of 0 since no file was submitted
-    Elsif (scalar(@ARGV) == 3)
-        Error: No file name submitted.\n is printed to STDOUT and the program 
-        exits with a value of 0 since no file was submitted
-    Elsif (scalar(@ARGV) >= 5)
-        Error: Too many input parameters.\n is printed to STDOUT and the program
-        exits with  value of 0 since no file was submitted
+If one or more of the aforementioned are not included an appropriate error 
+message saying such will be output and the program will exit with a value of 1.
+If too many command line arguments are provided a message saying so will be 
+output and the program will exit with a value of 1.  
 
-If the above conditions are passed the program then executes the following 
-steps:
-    -sets the scalar variable $tline to $ARGV[0], $ARGV[1], and $ARGV[2] 
-    joined together with a colon between each of the two mentioned values
-    -splits $ARGV[3] at every / and places the result in the array @tmpFile
-    -places the last entry of @tmpFile into $fname.  
-    -$tline and $fname, in that order, into the array @tmpArr
-    -opens the file in $ARGV[3] with filehandle DATA
-        -if not successful, Can't open $ARGV[3] $!\n is output with $! 
-        appropriately evaluated and the program is exited with a value of 0
-        since no file was submitted
-    -set $tmpArr[2] = '0' as a placeholder
-    -while <DATA>, put the contents of <DATA>, held in $_ PERL variable,
-    into the array @tmpArr starting at array position 3, 4, etc. until !<DATA>
-    -set $sizeArr = scalar(@tmpArr) - 3 with -3 representing the 3 array items
-    in @tmpArr that are not a part of the file named by $ARGV[3]
-    -set $tmpArr[2] = $sizeArr
-    -while the iterator $i, initialized to 0, is less than scalar(@tmpArr)
-    print $tmpArr[$1]\n to the socket $sock
-    -get the value returned as a result of the evaluation done by the server by
-    setting $valid = <$sock>
-    -If defined($valid) evaluate the following conditions
-        If ($valid eq "0")
-            Error: Username/password is not valid.\n is output to STDOUT and the 
-            program exits with a value of 0 since no file was submitted
-        Elsif ($valid eq "1")
-            Error: Class name is not valid.\n is output to STDOUT and the 
-            program exits with a value of 0 since no file was submitted
-        Elsif ($valid eq "2")
-            Error: Filename is not valid.\n is output to STDOUT and the program
-            exits with a value of 0 since no file was submitted
-        Elsif ($valid eq "3")
-            Error: Assignment is late.\n is output to STDOUT and the program
-            exits with a value of 0 since no file was submitted
-        Elsif ($valid eq "4")
-            File submit failed.\n is output to STDOUT and the program exits with
-            a value of 0 since no file was submitted
-        Elsif ($valid eq "5")
-            File submit successful.\n is output to STDOUT and the program exits
-            with a value of 1 since a file was successfully submitted
-    -If the program reaches this point either no response was received from the
-    server or the response was invalid.  If this is the case, exit with a value 
-    of 0 since no file was submitted 
+The program then passes name, password, and class name to the server.
+If the user name/password combination or class name are invalid or the 
+assignment is late the server passes an error code prompting this program 
+(UserClient.pl) to output a message saying so and exit with a value of 1.    
+
+If the program has not exited in the step above it sends the filename provided
+by the user to the server.  If the server deems the filename to be invalid it 
+passes an appropriate error code to this program (UserClient.pl) leading this
+program to output an appropriate error message and exit with a value of 1. 
+
+The program then sends the number of lines in the file and the file to the 
+server.
+
+If the program was able to successfully submit the file provided by the user
+a success message saying so is output and the program exits.  If the program was
+unsuccesful in submitting the file provided by the user an appropriate error
+message is output and the program exits. 
 
 Exceptions
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Unable to connect to server.
+Unable to connect to server: an appropriate error message is output and the
+program exits.
 
-File provided is unable to be opened.
+File provided is unable to be opened: an appropriate error message is output and
+the program exits.
 
 Assumptions
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Somewhere a server with appropriate programming is waiting for UserClient to
 connect to it (i.e. a server with modules capable of handling the information
-passed to the if by UserClient)
+passed to it by UserClient)
 
 The server will pass back information which can be interpreted by UserClient
-(e.g. the server will pass back one of "1", "2", "3", "4", "5")
+(e.g. the server will pass back between one and three of "1", "2", "3", "4", 
+"5", "400")
 
-The file being submitted to UserClient exists and can be opened
+The file being submitted to UserClient exists and can be opened by UserClient
 
-The user is able to enter input into the command line
+The user is able to enter input into the command line (e.g. perl UserClient.pl
+username password classname filename)
 
-The user has a version of PERL installed on their computer capable of running
-the program
-      
+The user has PERL installed on their computer 
+
+The user has the CPAN library IO::Socket installed on their computer 
+
+The user is running debian LINUX on their computer
+
+The user has a copy of this program       
