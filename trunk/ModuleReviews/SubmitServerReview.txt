@@ -1,0 +1,36 @@
+Review of Submit Server
+-----------------------------------------------------------------------
+Nov 1, 2012       4:40pm      All present
+
+Presented by Marius Loots
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ML    Comment on why "Find::Bin" was used
+         -in case program called from another directory, finds program's
+          location)
+   
+ML    Why does the for loop (line45) go from 0 to 4?
+         -to prevent deadlocks between userClient & submitServer 
+          encountered during development
+         -could be removed and restructured, but due to time restraints
+          it will be kept
+         -Loop doesn't go through 4 times, only 3. Change 4 to 3.
+      
+      Group acknowledges main issue here is that there were no working
+      MIS's for SubmitServer and UserClient before programming began, so
+      their communication was not defined.
+         
+LD    Errors should be defined at beginning and commented when used
+
+OL    Comment file transmission
+
+LD    We assume its an ascii file not a compiled program
+
+OL    isEnrolled & validAsgmn have lots of redundancy between them
+         -Due to time restraints, leave as is
+         
+ML    dateTime needs comment explanation
+
+      Needs more comments in general
+      
+
