@@ -91,8 +91,9 @@ if (!open(DATA, $ARGV[3])) {
 #later in the code
 $tmpArr[2] = '0';
 
-#Go through the file in DATA line by line and copy said line
-#into the array @tmpArr
+#Go through the file in DATA line by line and copy said line into the array @tmpArr;
+#start at array position 3 since first 3 array items are filled with $tline, $fname, 
+#and a placeholder
 for ($i = 3; <DATA>; $i++) {
 
      $tmpArr[$i] = $_;
@@ -133,7 +134,12 @@ if($valid eq "400")
    if($valid eq "400")
    {
 
-      #Pass the file in @tmpArr line by line to the server
+      #Pass number of lines in user provided file
+      #and the file from @tmpArr line by line to the server
+      #start at array position 2 since $tline and $fname are
+      #in the first two array positions.
+      #to print out number of lines 
+      #in file and the file itself
       for ($i = 2; $i < scalar(@tmpArr); $i++) 
       {
           print $sock "$tmpArr[$i]";
