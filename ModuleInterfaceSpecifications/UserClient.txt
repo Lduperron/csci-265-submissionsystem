@@ -15,14 +15,13 @@ must be 4, must be provided in the following order:
 
     3) Name of class to submit project to
 
-    4) Filename (must have .txt file extension)
+    4) Filename 
 
 The command to execute this program with the above parameters in the given
 order is:
 	perl UserClient.pl <USERNAME><PASSWORD><COURSE><SUBMIT_FILE.txt>
 
-In the command line, this command would appear as follows with the user's data
-substituted for that in the example:
+For example:
 	perl UserClient.pl john doe CSCI Unknown.txt
 
 If filename, filename AND class name, filename AND class name AND Password, or 
@@ -32,20 +31,19 @@ saying which situation has occurred will be output and the program will exit
 with a value of 1.  
 
 If too many command line arguments are provided a message 
-saying so will be output and the program will exit with a value of 1.  
+saying so will be output and the program will exit.  
 
 The program will then pass name, password, and class name to the server.
 If the user's name/password combination or class name are invalid or the 
 assignment is late the server passes an error code prompting this program 
-(UserClient.pl) to output a message saying so and exit with a value of 1.    
+(UserClient.pl) to output a message stating which of the above cases has 
+occurred and exit.    
 
 If the program has not exited in the step above and the server has sent back 
-both a code indicating a valid class name and username/password combination and 
-a code indicating that the assignment was on time it sends the filename
-provided by the user to the server.  If the server deems the filename to be 
-invalid it passes an appropriate error code to this program (UserClient.pl) 
-leading this program to output an appropriate error message and exit with a 
-value of 1. 
+a code indicating a valid class name and username/password combination it sends 
+the file name to the server.  If the file name is invalid the server returns an
+error code and the program (UserClient.pl) outputs a message stating that the 
+file name was invalid and exits.
 
 If the program has not exited and the server has sent back a code indicating
 a valid file name the program then sends the number of lines in the file and the 
@@ -53,11 +51,12 @@ file to the server.
 
 If the program was able to successfully submit the file provided by the user the
 server sends back a success code causing the program (UserClient.pl) to output a 
-message indicating successful file transfer and exit with a value of 0.  If the 
-program was unsuccesful in submitting the file provided by the user the server 
-sends back a file transfer failure code causing the program (UserClient.pl) to 
-output an error message indicating file transfer failure and exit with a value 
-of 1. 
+message indicating successful file transfer and exit.  If the program was 
+unsuccessful in submitting the file provided by the user the server sends back a 
+file transfer failure code causing the program (UserClient.pl) to output an 
+error message indicating file transfer failure and exit. 
+
+If the program has not exited at this point the program now exits.
 
 Exceptions
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -90,4 +89,4 @@ The user has the CPAN library IO::Socket installed on their computer
 
 The user is running debian LINUX on their computer
 
-The user has a copy of this program      
+The user has a copy of this program           
