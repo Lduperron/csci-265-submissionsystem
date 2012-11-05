@@ -1,41 +1,41 @@
 nothing:
-	@echo "enter 'make stage' create a StageArea"
-	@echo "enter 'make clean' to remove your StageArea"
+	@echo "Enter 'make install' create a SubmissionSystem"
+	@echo "Enter 'make uninstall' to remove your SubmissionSystem"
 
-stage: 
-	mkdir ../StageArea
-	mkdir ../StageArea/bin
-	cp -r StageREQ/config ../StageArea/config
-	mkdir ../StageArea/bin/Mod
-	cp StageREQ/PASS/makefile ../StageArea/bin/Mod/makefile
-	cp StageREQ/PASS/Session-Token-0.82.tar.gz ../StageArea/bin/Mod/Session-Token-0.82.tar.gz
-	cd ../StageArea/bin/Mod; make
+install: 
+	mkdir ../SubmissionSystem
+	mkdir ../SubmissionSystem/bin
+	cp -r StageREQ/config ../SubmissionSystem/config
+	mkdir ../SubmissionSystem/bin/Mod
+	cp StageREQ/PASS/makefile ../SubmissionSystem/bin/Mod/makefile
+	cp StageREQ/PASS/Session-Token-0.82.tar.gz ../SubmissionSystem/bin/Mod/Session-Token-0.82.tar.gz
+	cd ../SubmissionSystem/bin/Mod; make
 
-	cp MIClean/main.pl ../StageArea/bin/adminClient
-	chmod u+x ../StageArea/bin/adminClient
+	cp MIClean/main.pl ../SubmissionSystem/bin/adminClient
+	chmod u+x ../SubmissionSystem/bin/adminClient
 
-	cp MIClean/Passmod.pm ../StageArea/bin/Mod/Passmod.pm
-	cp MIClean/SubmitServer.pl ../StageArea/bin/Mod/SubmitServer
-	chmod u+x ../StageArea/bin/Mod/SubmitServer
+	cp MIClean/Passmod.pm ../SubmissionSystem/bin/Mod/Passmod.pm
+	cp MIClean/SubmitServer.pl ../SubmissionSystem/bin/Mod/SubmitServer
+	chmod u+x ../SubmissionSystem/bin/Mod/SubmitServer
 
-	cp MIClean/UserClient.pl ../StageArea/bin/submit
-	chmod u+x ../StageArea/bin/submit
+	cp MIClean/UserClient.pl ../SubmissionSystem/bin/submit
+	chmod u+x ../SubmissionSystem/bin/submit
 
-	cp MIClean/report.csh ../StageArea/bin/Mod/report
-	cp StageREQ/report_evaluate.csh ../StageArea/bin/Mod/report_evaluate
-	chmod u+x ../StageArea/bin/Mod/report
-	chmod u+x ../StageArea/bin/Mod/report_evaluate
+	cp MIClean/report.csh ../SubmissionSystem/bin/Mod/report
+	cp StageREQ/report_evaluate.csh ../SubmissionSystem/bin/Mod/report_evaluate
+	chmod u+x ../SubmissionSystem/bin/Mod/report
+	chmod u+x ../SubmissionSystem/bin/Mod/report_evaluate
 
-clean:
-	rm -f -r ../StageArea
+uninstall:
+	@echo "Are you sure you want to REVOME the SubmissionSystem?"
+	@echo "Type make uninstallConfirm to REMOVE the SubissionSystem"
+
+uninstallConfirm:
+	make remove
+
+remove:
+	rm -f -r ../SubmissionSystem
    
-cleanStage:
-	make clean
-	make stage
-
-post:
-	touch ../StageArea/courses/csci260/Pex1/tinp/0.txt
-	touch ../StageArea/courses/csci260/Pex1/texp/0.txt
-	touch ../StageArea/courses/csci260/Pex1/makefile
-	cp StageREQ/Pex1.C ../StageArea/bin
-	cat ../StageArea/students/bethpasswordSheet.txt
+reinstall:
+	make remove
+	make install

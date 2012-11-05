@@ -2,17 +2,22 @@ Passmod MIS
 ==================
 
 Normal behaviour
------------------------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The passgen and verification module (named Passmod.pm, for PASSword MODule) will handle password generation and password authentication.  
+The passgen and verification module (named Passmod.pm, for PASSword MODule)
+will handle password generation and password authentication.  
 Takes a username from another module and generates a list of passwords
-Tke a username and a password and return true or false if it is a valid username / password pair.  As soon as a password is returned ‘true’ it is invalidated.    The module has defaults that will be printed to the screen in a subroutine and will also provide methods to edit these defaults for the session, such as number of passwords or password complexity.
+Tke a username and a password and return true or false if it is a valid
+username / password pair.  As soon as a password is returned true it is invalidated.
+The module has defaults that will be printed to the screen in a subroutine
+and will also provide methods to edit these defaults for the session,
+such as number of passwords or password complexity.
 
 Settings:
-	length (int)
-	type (string, alphanum or num)
-	number (number of passwords in a password sheet)
-	
+   length (int)
+   type (string, alphanum or num)
+   number (number of passwords in a password sheet)
+   
 Defaults:
    Directory Path:  ../../students/
    Length:  8
@@ -20,15 +25,22 @@ Defaults:
    Number:  20
    
 Public methods:
--	generate(name) – Attempts to create a file with the name '<name>passwordSheet.txt' inside of the ../../students directory with a list of one-time passwords.  Immediately invalidates any existing passwords for the provided name if a password file already exists.
--	verify(name, password) – Returns true or false, checking against the top password in the file with the name “name”.  If true, password is immediately invalidated and deleted from the file.  
--	printSettings() – Prints current password generation settings to standard out
--	getSetting(setting) - Returns a string containing the value of the associated setting.
--	setSetting(setting, value) – Modifies a setting to a new value.  Preforms no checking on provided value.
+-   generate(name) Attempts to create a file with the name
+'<name>passwordSheet.txt' inside of the ../../students directory with a
+list of one-time passwords.  Immediately invalidates any existing passwords
+for the provided name if a password file already exists.
+
+-   verify(name, password) eturns true or false, checking against
+the top password in the file with the name name.
+If true, password is immediately invalidated and deleted from the file.  
+
+-   printSettings() Prints current password generation settings to standard out
+-   getSetting(setting) Returns a string containing the value of the associated setting.
+-   setSetting(setting, value) Modifies a setting to a new value.  Preforms no checking on provided value.
    
 Exceptions
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 ../../students folder does not exist - Module does not return reference to itself.
 The module has read access to student files that exist.
