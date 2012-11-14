@@ -1,0 +1,58 @@
+#================================================================--
+# Design Unit  : cew testbench for stack
+#
+# File Name    : tb.cew
+#
+# Purpose      : unit testing
+#
+# Note         :
+#
+# Limitations  :
+#
+# Errors       : none known
+#
+# Modules      : exc::exception
+#
+# Dependences  : cew
+#
+# Author       : Peter Walsh, Vancouver Island University
+#  Editor      :   Oliver Jourmel
+#
+# System       : Perl (Linux)
+#
+#------------------------------------------------------------------
+# Revision List
+# Version      Author  Date    Changes
+# 1.0          PW      Oct 12  New version (using cewEcase only)
+# 1.1          OJ      Nov 08  Added cewEcases
+#================================================================--
+
+$|=1;
+use strict;
+use warnings;
+
+include(CewDir/bin/cew.pl)
+
+use lib '../';
+use exc::exception;
+use Try::Tiny;
+
+cew_Variables
+
+# no exception thrown (should not fail)
+cew_Ncase( , 0, 0, !=)
+
+# unexpected exception thrown (should fail)
+cew_Ncase(die(exc::exception->new("full")), 0, 0, !=)
+
+# expected exception thrown (should not fail)
+cew_Ecase(die(exc::exception->new("full")), "full")
+
+# unexpected exception thrown (should fail)
+cew_Ecase(die(exc::exception->new("ull")), "full")
+cew_Ecase(die(exc::exception->new("full")), "ull")
+
+# expected exception not thrown (should fail)
+cew_Ecase( , "full")
+
+cew_Summary
