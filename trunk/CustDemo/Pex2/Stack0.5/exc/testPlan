@@ -1,0 +1,22 @@
+Test Plan for exception.pm
+Peter Walsh Oct 2012
+
+The tb.cew script contains test cases that are expected to fail.
+The intent is to verify that cew 5 the presence and absence of
+exceptions in the appropriate way.
+
+Make bats is expected to produce:
+
+Test Case ERROR (Ncase) in script at line number 44
+Unexpected Exception full thrown 
+Test Case ERROR (Ecase) in script at line number 50
+Unexpected exception ull thrown 
+Test Case ERROR (Ecase) in script at line number 51
+Unexpected exception full thrown 
+Test Case ERROR (Ecase) in script at line number 54
+Expected exception full not thrown 
+
+**********Summary**********
+Total number of test cases = 6
+Total number of test cases in error = 4
+`
